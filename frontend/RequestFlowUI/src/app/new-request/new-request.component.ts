@@ -1,4 +1,6 @@
+import { RecursiveAstVisitor } from '@angular/compiler';
 import { Component, ViewChild } from '@angular/core';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-new-request',
@@ -11,6 +13,9 @@ export class NewRequestComponent {
   fileType:any;
   records:CSVRecord[]=[];
   @ViewChild('csvReader') csvReader: any;
+
+  constructor(public userService: UserService){}
+
   fileChanged(e:any) {
       this.file = e.target.files[0];
       console.log(this.file);
@@ -25,7 +30,7 @@ export class NewRequestComponent {
 
   browseFiles(){
     let fileReader = new FileReader();
-
+    
     if(this.fileType==="CSV"){
       console.log("here");
       fileReader.readAsText(this.file);
@@ -85,7 +90,20 @@ export class NewRequestComponent {
     this.records = [];  
   }  
 
+  submit(){
+    this.userService.submitFileForApproval(this.file).subscribe(
+      data => {
+        console.log("success");
+        console.log(data);
+        this.fileReset();
+      },
+      error => {
+        console.error(error);
+      }
+    );
   }
+
+}
 
 
 export class CSVRecord {  
