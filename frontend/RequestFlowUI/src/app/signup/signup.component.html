@@ -1,1 +1,15 @@
-<p>signup works!</p>
+<div class="container">
+
+    First name:<input type="text" [(ngModel)]="signupRequest.firstName">
+    <br>
+    Last name:<input type="text" [(ngModel)]="signupRequest.lastName">
+    <br>
+    User name:<input type="text" [(ngModel)]="signupRequest.userName">
+    <br>
+    Email Id:<input type="email" [(ngModel)]="signupRequest.emailId">
+    <br>
+    Password:<input type="text" [(ngModel)]="signupRequest.password">
+    <br>
+    <button (click)="signup()">Sign up</button>
+
+</div>

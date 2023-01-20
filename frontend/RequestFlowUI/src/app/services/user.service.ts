@@ -8,6 +8,10 @@ const apiUrl="http://localhost:8080/api/";
   providedIn: 'root'
 })
 export class UserService {
+  
+  signUpUser(signupRequest: any) {
+    return this.http.post(apiUrl + 'signup', signupRequest);
+  }
 
   submitFileForApproval(file: any) :Observable<any> {
     const formData = new FormData(); 
@@ -15,6 +19,8 @@ export class UserService {
     return this.http.post(apiUrl + 'submitFileForApproval', formData);
     
   }
+
+
 
   constructor(private http: HttpClient) { }
 }
