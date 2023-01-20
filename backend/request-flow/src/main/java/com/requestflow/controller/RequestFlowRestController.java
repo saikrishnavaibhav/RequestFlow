@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,5 +44,28 @@ public class RequestFlowRestController {
 		
 		return requestFlowService.getRequests(userId);
 	}
+	
+	@PutMapping("/assignRequest")
+	public ResponseEntity<?> assignRequestToApprover(@RequestParam("userId") Long userId, @RequestParam("requestId") Long requestId){
+		
+		return requestFlowService.assignRequest(userId,requestId);
+	}
+	
+	@GetMapping("/viewRequest")
+	public ResponseEntity<?> viewRequest(@RequestParam("requestId") Long requestId){
+		return requestFlowService.viewRequest(requestId);
+	}
+	
+	@PostMapping("/approve")
+	public ResponseEntity<?> approveRequest(@RequestParam("requestId") Long requestId){
+		return requestFlowService.approveRequest(requestId);
+	}
+	
+	@PostMapping("/reject")
+	public ResponseEntity<?> rejectRequest(@RequestParam("requestId") Long requestId){
+		return requestFlowService.rejectRequest(requestId);
+	}
+	
+	
 
 }

@@ -1,10 +1,16 @@
 package com.requestflow.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.requestflow.entities.ApprovalEntity;
 import com.requestflow.entities.RequestEntity;
 import com.requestflow.entities.UserEntity;
 import com.requestflow.repositories.RequestRepository;
@@ -59,6 +65,44 @@ public class RequestFlowService {
 		userRepository.save(userEntity);
 		
 		return ResponseEntity.accepted().build();
+	}
+
+	public ResponseEntity<?> assignRequest(Long userId, Long requestId) {
+		Optional<UserEntity> optionalUserEntity = userRepository.findById(userId);
+		UserEntity userEntity = optionalUserEntity.get(); 
+		RequestEntity requestEntity = requestRepository.findByRequestId(requestId);
+		ApprovalEntity approvalEntity = new ApprovalEntity();
+		
+		approvalEntity.setApprover(userEntity.getFirstName() + ", " + userEntity.getLastName());
+		approvalEntity.setApproverId(userEntity.getId());
+		approvalEntity.setRequestId(requestId);
+		approvalEntity.setStatus(ApprovalEnum.INPROGRESS);
+		
+		List<ApprovalEntity> approvals = new ArrayList<>();
+		approvals.add(approvalEntity);
+		
+		requestEntity.setApprovals(approvals);
+		requestRepository.save(requestEntity);
+		return ResponseEntity.ok().build();
+	}
+
+	public ResponseEntity<?> viewRequest(Long requestId) {
+		RequestEntity requestEntity = requestRepository.findByRequestId(requestId);
+		return ResponseEntity.ok(requestEntity);
+	}
+
+	//need user id as well and make it approved
+	public ResponseEntity<?> approveRequest(Long requestId) {
+		RequestEntity requestEntity = requestRepository.findByRequestId(requestId);
+		requestEntity.setStatus(ApprovalEnum.APPROVED);
+		//List<ApprovalEntity> approvalEntities = requestEntity.getApprovals();
+		
+		return null;
+	}
+
+	public ResponseEntity<?> rejectRequest(Long requestId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

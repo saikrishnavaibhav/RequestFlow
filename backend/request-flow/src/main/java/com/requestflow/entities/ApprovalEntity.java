@@ -15,6 +15,8 @@ public class ApprovalEntity {
 	@Enumerated(EnumType.STRING)
 	private ApprovalEnum status;
 	
+	private Long approverId;
+	
 	private String approver;
 	
 	private String remarks;
@@ -35,6 +37,14 @@ public class ApprovalEntity {
 
 	public void setStatus(ApprovalEnum status) {
 		this.status = status;
+	}
+
+	public Long getApproverId() {
+		return approverId;
+	}
+
+	public void setApproverId(Long approverId) {
+		this.approverId = approverId;
 	}
 
 	public String getApprover() {
@@ -63,7 +73,7 @@ public class ApprovalEntity {
 
 	@Override
 	public String toString() {
-		return "ApprovalEntity [id=" + id + ", status=" + status + ", approver=" + approver + ", remarks=" + remarks
+		return "ApprovalEntity [id=" + id + ", status=" + status + ", approverId=" + approverId + ", approver=" + approver + ", remarks=" + remarks
 				+ ", requestId=" + requestId + "]";
 	}
 	
