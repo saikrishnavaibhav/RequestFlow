@@ -1,5 +1,7 @@
 package com.requestflow.entities;
 
+import com.requestflow.utils.ApprovalEnum;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -9,13 +11,14 @@ public class ApprovalEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	private String status;
+	@Enumerated(EnumType.STRING)
+	private ApprovalEnum status;
 	
 	private String approver;
 	
 	private String remarks;
 	
-	private String requestId;
+	private Long requestId;
 
 	public long getId() {
 		return id;
@@ -25,11 +28,11 @@ public class ApprovalEntity {
 		this.id = id;
 	}
 
-	public String getStatus() {
+	public ApprovalEnum getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(ApprovalEnum status) {
 		this.status = status;
 	}
 
@@ -49,11 +52,11 @@ public class ApprovalEntity {
 		this.remarks = remarks;
 	}
 	
-	public String getRequestId() {
+	public Long getRequestId() {
 		return requestId;
 	}
 
-	public void setRequestId(String requestId) {
+	public void setRequestId(Long requestId) {
 		this.requestId = requestId;
 	}
 
