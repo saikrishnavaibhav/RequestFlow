@@ -42,7 +42,6 @@ public class RequestFlowService {
 	}
 
 	public ResponseEntity<?> signupUser(SignupRequest signupRequest) {
-		
 		UserEntity userEntity = new UserEntity();
 		
 		userEntity.setEmailId(signupRequest.getEmailId());
@@ -50,12 +49,12 @@ public class RequestFlowService {
 		userEntity.setLastName(signupRequest.getLastName());
 		userEntity.setPassword(signupRequest.getPassword());
 		userEntity.setUserName(signupRequest.getUserName());
-		if(signupRequest.getRole().equals("approver"))
+		if("approver".equals(signupRequest.getRole()))
 			userEntity.setRole(RolesEnum.APPROVER);
-		if(signupRequest.getRole().equals("requestor"))
-			userEntity.setRole(RolesEnum.REQUESTOR);
-		if(signupRequest.getRole().equals("admin"))
+		else if("admin".equals(signupRequest.getRole()))
 			userEntity.setRole(RolesEnum.ADMIN);
+		else
+			userEntity.setRole(RolesEnum.REQUESTOR);
 		
 		userRepository.save(userEntity);
 		

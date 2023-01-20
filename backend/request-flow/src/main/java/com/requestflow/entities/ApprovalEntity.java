@@ -5,6 +5,7 @@ import com.requestflow.utils.ApprovalEnum;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "approvals")
 public class ApprovalEntity {
 
 	@Id
