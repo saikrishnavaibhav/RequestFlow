@@ -1,13 +1,16 @@
 package com.requestflow.entities;
 
-import com.requestflow.utils.RolesEnum;
+import java.util.HashSet;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -24,8 +27,11 @@ public class UserEntity {
 	
 	private String userName;
 	
-	@Enumerated(EnumType.STRING)
-	private RolesEnum role;
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(	name = "user_roles", 
+				joinColumns = @JoinColumn(name = "user_id"), 
+				inverseJoinColumns = @JoinColumn(name = "role_id"))
+	Set<Role> roles = new HashSet<>();
 	
 	private String emailId;
 	
@@ -63,12 +69,12 @@ public class UserEntity {
 		this.userName = userName;
 	}
 
-	public RolesEnum getRole() {
-		return role;
+	public Set<Role> getRoles() {
+		return roles;
 	}
 
-	public void setRole(RolesEnum role) {
-		this.role = role;
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
 	}
 
 	public String getEmailId() {
@@ -89,8 +95,8 @@ public class UserEntity {
 
 	@Override
 	public String toString() {
-		return "UserEntity [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName + ", role=" + role
-				+ ", emailId=" + emailId + ", password=" + password + "]";
+		return "UserEntity [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName
+				+ ", roles=" + roles + ", emailId=" + emailId + ", password=" + password + "]";
 	}
 
 }

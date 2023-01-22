@@ -12,6 +12,4 @@ public interface RequestRepository extends CrudRepository<RequestEntity, Long> {
 	
 	List<RequestEntity> findAllByUserId(Long userId);
 
-	RequestEntity findByRequestId(Long requestId); 
-
 }

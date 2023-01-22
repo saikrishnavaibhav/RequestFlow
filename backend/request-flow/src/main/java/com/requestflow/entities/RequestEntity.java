@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.requestflow.utils.ApprovalEnum;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -39,7 +40,7 @@ public class RequestEntity {
 	@Enumerated(EnumType.STRING)
 	private ApprovalEnum status;
 	
-	@OneToMany(fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
 	@JoinTable(	name = "current_status", 
 				joinColumns = @JoinColumn(name = "request_Id"), 
 				inverseJoinColumns = @JoinColumn(name = "status_Id"))

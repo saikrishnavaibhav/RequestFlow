@@ -1,5 +1,7 @@
 package com.requestflow.requests;
 
+import java.util.List;
+
 public class SignupRequest {
 	
 	private String firstName;
@@ -13,6 +15,8 @@ public class SignupRequest {
 	private String emailId;
 	
 	private String password;
+	
+	private List<String> roles;
 
 	public String getFirstName() {
 		return firstName;
@@ -62,10 +66,18 @@ public class SignupRequest {
 		this.password = password;
 	}
 
+	public List<String> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<String> roles) {
+		this.roles = roles;
+	}
+
 	@Override
 	public String toString() {
-		return "SignupRequest [firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName + ", role=" + role + ", emailId="
-				+ emailId + ", password=" + password + "]";
+		return "SignupRequest [firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName + ", role="
+				+ role + ", emailId=" + emailId + ", password=" + password + ", roles=" + roles + "]";
 	}
 
 }
