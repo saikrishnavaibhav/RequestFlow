@@ -9,6 +9,8 @@ import { SignupComponent } from './signup/signup.component';
 import { NewRequestComponent } from './new-request/new-request.component';
 import { ViewRequestComponent } from './view-request/view-request.component';
 import { HomeComponent } from './home/home.component';
+import { ApproverComponent } from './approver/approver.component';
+import { authInterceptorProviders } from './_helpers/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -17,7 +19,8 @@ import { HomeComponent } from './home/home.component';
     SignupComponent,
     NewRequestComponent,
     ViewRequestComponent,
-    HomeComponent
+    HomeComponent,
+    ApproverComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +28,7 @@ import { HomeComponent } from './home/home.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [],
+  providers: [authInterceptorProviders],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

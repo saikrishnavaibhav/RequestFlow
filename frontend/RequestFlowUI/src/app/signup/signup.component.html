@@ -10,6 +10,21 @@
     <br>
     Password:<input type="text" [(ngModel)]="signupRequest.password">
     <br>
+    <div class = 'form-role'>
+        <label for="role">Role</label>
+        <input
+          type="radio"
+          name="role"
+          value="requestor"
+          [(ngModel)]="signupRequest.role"
+        /> Requestor
+        <input
+          type="radio"
+          name="role"
+          value="approver"
+          [(ngModel)]="signupRequest.role"
+        /> Approver
+      </div>
     <button (click)="signup()">Sign up</button>
 
 </div>

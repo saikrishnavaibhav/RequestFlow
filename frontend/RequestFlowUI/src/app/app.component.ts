@@ -11,7 +11,7 @@ export class AppComponent implements OnInit {
   isLoggedIn = false;
   showModeratorBoard = false;
   username?: string;
-  isAuthor = false;
+  isApprover = false;
 
   constructor(private tokenStorageService: TokenStorageService) { }
 
@@ -22,9 +22,9 @@ export class AppComponent implements OnInit {
       const user = this.tokenStorageService.getUser();
       this.roles = user.roles;
       this.username = user.username;
-      // if(this.roles[0] === 'ROLE_ADMIN'){
-      //   this.isAuthor = true;
-      // }
+      if(this.roles[0] === 'ROLE_APPROVER'){
+        this.isApprover = true;
+      }
     }
   }
 

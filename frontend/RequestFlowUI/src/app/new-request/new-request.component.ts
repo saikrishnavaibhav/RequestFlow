@@ -1,5 +1,6 @@
 import { RecursiveAstVisitor } from '@angular/compiler';
 import { Component, ViewChild } from '@angular/core';
+import { TokenStorageService } from '../services/token-storage.service';
 import { UserService } from '../services/user.service';
 
 @Component({
@@ -11,10 +12,12 @@ export class NewRequestComponent {
 
   file:any;
   fileType:any;
+  isSubmitSuccess = false;
+  isSubmitFailure = false;
   records:CSVRecord[]=[];
   @ViewChild('csvReader') csvReader: any;
 
-  constructor(public userService: UserService){}
+  constructor(public userService: UserService, public tokenService: TokenStorageService){}
 
   fileChanged(e:any) {
       this.file = e.target.files[0];
@@ -91,14 +94,22 @@ export class NewRequestComponent {
   }  
 
   submit(){
-    this.userService.submitFileForApproval(this.file).subscribe(
+    this.userService.submitFileForApproval(this.file, this.tokenService.getUser().id).subscribe(
       data => {
         console.log("success");
         console.log(data);
         this.fileReset();
+        this.isSubmitSuccess = true;
+        setTimeout(() => {
+          this.isSubmitSuccess = false;
+        }, 2000);
       },
       error => {
         console.error(error);
+        this.isSubmitFailure = true;
+        setTimeout(() => {
+          this.isSubmitFailure = false;
+        }, 2000);
       }
     );
   }
@@ -111,4 +122,8 @@ export class CSVRecord {
   public firstName: any;  
   public lastName: any;  
   public age: any;   
+}
+
+export class User{
+
 }
