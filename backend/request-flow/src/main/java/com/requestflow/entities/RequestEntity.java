@@ -34,6 +34,8 @@ public class RequestEntity {
 	
 	private Long userId;
 	
+	private String fileName;
+	
 	@Lob
 	private byte[] file;
 	
@@ -70,6 +72,14 @@ public class RequestEntity {
 		this.date = Timestamp.valueOf(LocalDateTime.now());
 	}
 
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
 	public byte[] getFile() {
 		return file;
 	}
@@ -96,8 +106,8 @@ public class RequestEntity {
 
 	@Override
 	public String toString() {
-		return "RequestEntity [id=" + id + ", userId=" + userId + ", date=" + date + ", file=" + Arrays.toString(file) + ", status="
-				+ status + ", approvals=" + approvals + "]";
+		return "RequestEntity [id=" + id + ", date=" + date + ", userId=" + userId + ", fileName=" + fileName
+				+ ", file=" + Arrays.toString(file) + ", status=" + status + ", approvals=" + approvals + "]";
 	}
-	
+
 }

@@ -24,7 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.requestflow.jwt.JwtUtils;
 import com.requestflow.requests.LoginRequest;
 import com.requestflow.requests.SignupRequest;
-import com.requestflow.responses.JwtResponse;
+import com.requestflow.responses.LoginResponse;
 import com.requestflow.service.RequestFlowService;
 import com.requestflow.userdetails.UserDetailsImpl;
 
@@ -51,7 +51,7 @@ public class RequestFlowRestController {
 	}
 	
 	@PostMapping("/sign-in")
-	public ResponseEntity<JwtResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
+	public ResponseEntity<LoginResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
 
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword()));
@@ -65,7 +65,7 @@ public class RequestFlowRestController {
 				.map(GrantedAuthority::getAuthority)
 				.collect(Collectors.toList());
 		
-		return ResponseEntity.ok(new JwtResponse(jwt, 
+		return ResponseEntity.ok(new LoginResponse(jwt, 
 												 userDetails.getId(), 
 												 userDetails.getUsername(), 
 												 userDetails.getEmail(), 
@@ -77,14 +77,14 @@ public class RequestFlowRestController {
 	@PostMapping("/submitFileForApproval") 
 	public ResponseEntity<?> submitFileForApproval( @RequestParam("file") MultipartFile file, @RequestParam("userId") long userId) throws IOException {
 		
-		return requestFlowService.submitRequestForApproval(file);
+		return requestFlowService.submitRequestForApproval(file,userId);
 	}
 	
 	@PreAuthorize("hasAuthority('ROLE_REQUESTOR') OR hasAuthority('ROLE_APPROVER') OR hasAuthority('ROLE_ADMIN')")
 	@GetMapping("/getRequests")
 	public ResponseEntity<?> getRequests(@RequestParam("userId") long userId) throws IOException {
 		
-		return requestFlowService.getRequests(userId);
+		return requestFlowService.getRequestsOfUser(userId);
 	}
 	
 	@PreAuthorize("hasAuthority('ROLE_APPROVER') OR hasAuthority('ROLE_ADMIN')")

@@ -2,7 +2,7 @@ package com.requestflow.responses;
 
 import java.util.List;
 
-public class JwtResponse {
+public class LoginResponse {
 	private String token;
 	private String type = "Bearer";
 	private Long id;
@@ -12,7 +12,7 @@ public class JwtResponse {
 	private List<String> roles;
 	
 
-	public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
+	public LoginResponse(String accessToken, Long id, String username, String email, List<String> roles) {
 		this.token = accessToken;
 		this.id = id;
 		this.userName = username;
@@ -20,7 +20,7 @@ public class JwtResponse {
 		this.roles = roles;
 	}
 
-	public JwtResponse(String accessToken, Long id, String username, String email,String phoneNumber, List<String> roles) {
+	public LoginResponse(String accessToken, Long id, String username, String email,String phoneNumber, List<String> roles) {
 		this.token = accessToken;
 		this.id = id;
 		this.userName = username;
