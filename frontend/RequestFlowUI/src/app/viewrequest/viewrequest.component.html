@@ -1,21 +1,43 @@
 <div class="component">
-    
-        {{request.id}}
-        {{request.date}}
-        {{request.fileName}}
-        
-        <table class="minimalistBlack" *ngIf="records.length > 0">    
-            <thead>    
-              <tr>   
-                <th *ngFor="let head of header">{{head}}</th>
-              </tr>    
-            </thead>    
-            <tbody>    
-              <tr *ngFor="let record of records;">    
-                <td *ngFor="let rec of record;"> <span>{{rec}}</span> </td>
-              </tr>    
-            </tbody>    
-          </table>
-        
-      </div>
+  <b>Request Id:</b>&nbsp;{{request.id}}
+  <br>
+  <b>Request Date:</b>&nbsp;{{request.date}}
+  <br>
+  <b>File name:</b>&nbsp;{{request.fileName}}
+  <br>
+  <b>File Data:</b>
+  <br>
+  <table class="minimalistBlack" *ngIf="records.length > 0">    
+      <thead>    
+        <tr>   
+          <th *ngFor="let head of header">{{head}}</th>
+        </tr>    
+      </thead>    
+      <tbody>    
+        <tr *ngFor="let record of records;">    
+          <td *ngFor="let rec of record;"> <span>{{rec}}</span> </td>
+        </tr>    
+      </tbody>    
+    </table>
+  
+  <div *ngIf="isApprover">
+    <button (click)="approve(false)" *ngIf="!approved">REJECT</button>
+    <button (click)="approve(true)" *ngIf="!approved">APPROVE</button>
+    <div
+      class="alert alert-success"
+      role="alert"
+      *ngIf="showSuccess || approved"
+      >
+      Request Approved
+    </div>
+    <div
+      class="alert alert-danger"
+      role="alert"
+      *ngIf="showFailed"
+      >
+      Request Approve failed
+    </div>
+  </div>
+  
+</div>
     

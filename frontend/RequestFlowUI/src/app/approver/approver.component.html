@@ -10,11 +10,14 @@
         </thead>    
         <tbody>  
             <tr *ngFor="let request of requests">
-                <td> <span (click)="openRequest(request)" [routerLink]="['/viewRequest', request.id]">{{request.id}}</span> </td>
+                <td> <span>{{request.id}}</span> </td>
                 <td> <span>{{request.fileName}} </span> </td>
                 <td> <span>{{request.status}} </span> </td>
                 <td> <span>{{request.date}} </span> </td>
-                <td><button (click)="assignRequest(request.id)">Assign to me</button></td>
+                <td>
+                    <button (click)="assignRequest(request)" *ngIf="!checkAssignee(request)">Assign to me</button>
+                    <button (click)="openRequest(request)" [routerLink]="['/viewRequest', request.id]" *ngIf="checkAssignee(request)">View Request</button>
+                </td>
             </tr>
         </tbody>
     </table>

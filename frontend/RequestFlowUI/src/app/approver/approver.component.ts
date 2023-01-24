@@ -19,7 +19,6 @@ export class ApproverComponent implements OnInit {
   ngOnInit(): void {
 
     this.user = this.tokenService.getUser();
-
     this.userService.getAllRequests()
     .subscribe(
       data => {
@@ -35,19 +34,33 @@ export class ApproverComponent implements OnInit {
   }
 
   openRequest(request: any) {
-    console.log(request);
-      this.requestService.setRequest(request);
+    this.requestService.setRequest(request);
   }
 
-  assignRequest(reqId: number){
-    this.userService.assignRequest(this.tokenService.getUser().id,reqId).subscribe(
+  assignRequest(request: Request){
+    this.userService.assignRequest(this.user.id,request.id).subscribe(
       data=> {
-        console.log(data);
+        request.status="INPROGRESS"
+        request.approvals = [{
+          approverId : this.user.id
+        }]
       },
       error=>{
       console.error(error);
       }
     );
+
+  }
+
+  checkAssignee(request: Request){
+    let approvals:any[] = request.approvals;
+    for(let approver of approvals){
+      if(approver.approverId === this.user.id){
+        return true;
+      }
+    }
+    
+    return false;
   }
 
 }

@@ -1,8 +1,11 @@
 <div id="app">
   <nav class="navbar navbar-expand navbar-dark bg-dark">
     <ul class="navbar-nav mr-auto" routerLinkActive="active">
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="!isApprover">
         <a href="/home" class="nav-link" routerLink="home">Home </a>
+      </li>
+      <li class="nav-item" *ngIf="isApprover">
+        <a href="/approver" class="nav-link" routerLink="approver">Home </a>
       </li>
     </ul>
 

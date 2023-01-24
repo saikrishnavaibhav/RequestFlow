@@ -41,10 +41,14 @@ export class UserService {
   assignRequest(userId: number, requestId: number) {
     let queryParams = new HttpParams();
     queryParams = queryParams.append("userId",userId).append("requestId", requestId);
-    return this.http.post(apiUrl + 'assignRequest', {headers, params:queryParams});
+    return this.http.post(apiUrl + 'assignRequest',null, {params:queryParams});
   }
   
-
+  approveRequest(userId: number, requestId: number, approve: boolean){
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("userId",userId).append("requestId", requestId).append("approve", approve);
+    return this.http.post(apiUrl + 'approveRequest',null, {params:queryParams});
+  }
 
   constructor(private http: HttpClient) { }
 }
