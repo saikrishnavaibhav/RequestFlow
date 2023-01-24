@@ -23,11 +23,12 @@ export class AuthInterceptor implements HttpInterceptor {
     
       (error:any) => {
        if( error instanceof HttpErrorResponse){
-        //  if(error.status === 401){ 
-        //   console.error(error);
-        //   this.router.navigateByUrl('/login')
-        //   this.token.signOut();
-        // }
+         if(error.status === 401){ 
+          console.error(error);
+          this.router.navigateByUrl('/login')
+          this.token.signOut();
+        }
+        
       }
     }
     ));

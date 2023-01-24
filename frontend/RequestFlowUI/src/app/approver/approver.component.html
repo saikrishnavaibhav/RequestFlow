@@ -1,1 +1,21 @@
-<p>approver works!</p>
+<div class="requests-container" ng-app="requests App" ng-controller="requests controller">
+    <table class="minimalistBlack" *ngIf="requests.length > 0">    
+        <thead>    
+            <tr>    
+                <th>ID </th>    
+                <th>FILE NAME </th>    
+                <th>STATUS </th>    
+                <th>DATE </th>   
+            </tr>    
+        </thead>    
+        <tbody>  
+            <tr *ngFor="let request of requests">
+                <td> <span (click)="openRequest(request)" [routerLink]="['/viewRequest', request.id]">{{request.id}}</span> </td>
+                <td> <span>{{request.fileName}} </span> </td>
+                <td> <span>{{request.status}} </span> </td>
+                <td> <span>{{request.date}} </span> </td>
+                <td><button (click)="assignRequest(request.id)">Assign to me</button></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

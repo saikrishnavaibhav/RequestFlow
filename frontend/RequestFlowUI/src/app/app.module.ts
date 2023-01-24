@@ -7,10 +7,10 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { SignupComponent } from './signup/signup.component';
 import { NewRequestComponent } from './new-request/new-request.component';
-import { ViewRequestComponent } from './view-request/view-request.component';
 import { HomeComponent } from './home/home.component';
 import { ApproverComponent } from './approver/approver.component';
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
+import { ViewrequestComponent } from './viewrequest/viewrequest.component';
 
 @NgModule({
   declarations: [
@@ -18,9 +18,9 @@ import { authInterceptorProviders } from './_helpers/auth.interceptor';
     LoginComponent,
     SignupComponent,
     NewRequestComponent,
-    ViewRequestComponent,
     HomeComponent,
-    ApproverComponent
+    ApproverComponent,
+    ViewrequestComponent
   ],
   imports: [
     BrowserModule,

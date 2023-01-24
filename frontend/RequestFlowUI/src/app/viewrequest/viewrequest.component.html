@@ -1,0 +1,21 @@
+<div class="component">
+    
+        {{request.id}}
+        {{request.date}}
+        {{request.fileName}}
+        
+        <table class="minimalistBlack" *ngIf="records.length > 0">    
+            <thead>    
+              <tr>   
+                <th *ngFor="let head of header">{{head}}</th>
+              </tr>    
+            </thead>    
+            <tbody>    
+              <tr *ngFor="let record of records;">    
+                <td *ngFor="let rec of record;"> <span>{{rec}}</span> </td>
+              </tr>    
+            </tbody>    
+          </table>
+        
+      </div>
+    

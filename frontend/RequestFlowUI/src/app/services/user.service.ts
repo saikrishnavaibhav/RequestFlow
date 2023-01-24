@@ -34,6 +34,17 @@ export class UserService {
     return this.http.get(apiUrl + 'getRequests', {headers, params:queryParams});
   }
 
+  getAllRequests(){
+    return this.http.get(apiUrl + 'getAllRequests');
+  }
+
+  assignRequest(userId: number, requestId: number) {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("userId",userId).append("requestId", requestId);
+    return this.http.post(apiUrl + 'assignRequest', {headers, params:queryParams});
+  }
+  
+
 
   constructor(private http: HttpClient) { }
 }

@@ -1,1 +1,24 @@
-<p>home works!</p>
+<div class="requests-container" ng-app="requests App" ng-controller="requests controller">
+    <h5 *ngIf="userRequests.length>0">Requests created by {{user.username}}</h5>
+    <div class="alert alert-warning" *ngIf="userRequests.length==0">
+      {{user.username}} haven't created any requests yet
+    </div>
+    <table class="minimalistBlack" *ngIf="userRequests.length > 0">    
+        <thead>    
+            <tr>    
+                <th>ID </th>    
+                <th>FILE NAME </th>    
+                <th>STATUS </th>    
+                <th>DATE </th>   
+            </tr>    
+        </thead>    
+        <tbody>  
+            <tr *ngFor="let request of userRequests">
+                <td> <span (click)="openRequest(request)" [routerLink]="['/viewRequest', request.id]">{{request.id}}</span> </td>
+                <td> <span>{{request.fileName}} </span> </td>
+                <td> <span>{{request.status}} </span> </td>
+                <td> <span>{{request.date}} </span> </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
