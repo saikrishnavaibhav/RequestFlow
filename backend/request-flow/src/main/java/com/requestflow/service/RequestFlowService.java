@@ -63,37 +63,41 @@ public class RequestFlowService {
 		return ResponseEntity.ok().build();
 	}
 
-	public ResponseEntity<?> getRequests(long userId) {
-		
-		return ResponseEntity.ok(requestRepository.findAll());
+	public ResponseEntity<?> getRequests() {
+		List<RequestResponse> requestResponses  = new ArrayList<>();
+		requestRepository.findAll()
+		.forEach(re -> requestResponses.add(getRequestResponse(re)));
+		return ResponseEntity.ok(requestResponses);
 	}
 	
 	public ResponseEntity<?> getRequestsOfUser(long userId) {
 		List<RequestResponse> requestResponses  = new ArrayList<>();
 		requestRepository.findAllByUserId(userId).stream()
-		.forEach(re -> {
-				RequestResponse requestResponse = new RequestResponse();
-				requestResponse.setId(re.getId());
-
-				@SuppressWarnings("deprecation")
-				String date = "" + re.getDate().getDate() + "-" + re.getDate().getMonth() + 1 + "-"
-						+ re.getDate().getYear();
-				requestResponse.setDate(date);
-
-				// requestResponse.setFile(re.getFile());
-
-				InputStream is = new ByteArrayInputStream(re.getFile());
-				List<String> stringFromBytes = streamToString(is, StandardCharsets.UTF_8);
-				System.out.println("String recreated from bytes : " + stringFromBytes);
-
-				requestResponse.setFile(stringFromBytes);
-				requestResponse.setFileName(re.getFileName());
-				requestResponse.setStatus(re.getStatus());
-				requestResponse.setApprovals(re.getApprovals());
-				requestResponses.add(requestResponse);
-		});
+		.forEach(re -> requestResponses.add(getRequestResponse(re)));
 		return ResponseEntity.ok(requestResponses);
 	}
+	
+	private RequestResponse getRequestResponse(RequestEntity re) {
+		RequestResponse requestResponse = new RequestResponse();
+		requestResponse.setId(re.getId());
+
+		@SuppressWarnings("deprecation")
+		String date = "" + re.getDate().getDate() + "-" + re.getDate().getMonth() + 1 + "-"
+				+ re.getDate().getYear();
+		requestResponse.setDate(date);
+
+		// requestResponse.setFile(re.getFile());
+
+		InputStream is = new ByteArrayInputStream(re.getFile());
+		List<String> stringFromBytes = streamToString(is, StandardCharsets.UTF_8);
+		System.out.println("String recreated from bytes : " + stringFromBytes);
+
+		requestResponse.setFile(stringFromBytes);
+		requestResponse.setFileName(re.getFileName());
+		requestResponse.setStatus(re.getStatus());
+		requestResponse.setApprovals(re.getApprovals());
+		return requestResponse;
+}
 	
 	public List<String> streamToString(InputStream is, Charset encoding) {
 		BufferedReader br = new BufferedReader(new InputStreamReader(is, encoding));
@@ -177,6 +181,7 @@ public class RequestFlowService {
 		List<ApprovalEntity> approvals = new ArrayList<>();
 		approvals.add(approvalEntity);
 		
+		requestEntity.setStatus(ApprovalEnum.INPROGRESS);
 		requestEntity.setApprovals(approvals);
 		requestRepository.save(requestEntity);
 		return ResponseEntity.ok().build();

@@ -88,6 +88,13 @@ public class RequestFlowRestController {
 	}
 	
 	@PreAuthorize("hasAuthority('ROLE_APPROVER') OR hasAuthority('ROLE_ADMIN')")
+	@GetMapping("/getAllRequests")
+	public ResponseEntity<?> getAllRequests() throws IOException {
+		
+		return requestFlowService.getRequests();
+	}
+	
+	@PreAuthorize("hasAuthority('ROLE_APPROVER') OR hasAuthority('ROLE_ADMIN')")
 	@PostMapping("/assignRequest")
 	public ResponseEntity<?> assignRequestToApprover(@RequestParam("userId") Long userId, @RequestParam("requestId") Long requestId) throws Exception{
 		
@@ -101,7 +108,7 @@ public class RequestFlowRestController {
 	}
 	
 	@PreAuthorize("hasRole('APPROVER') OR hasRole('ADMIN')")
-	@PostMapping("/approve")
+	@PostMapping("/approveRequest")
 	public ResponseEntity<?> approveRequest(@RequestParam("requestId") Long requestId, @RequestParam("userId") long userId, @RequestParam("approve") boolean approve) throws Exception{
 		return requestFlowService.approveRequest(requestId, userId, approve);
 	}
