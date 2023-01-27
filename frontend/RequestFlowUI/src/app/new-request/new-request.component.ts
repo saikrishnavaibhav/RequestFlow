@@ -1,7 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TokenStorageService } from '../services/token-storage.service';
 import { UserService } from '../services/user.service';
+import { SubmitDialogComponent } from '../submit-dialog/submit-dialog.component';
 
 @Component({
   selector: 'app-new-request',
@@ -19,7 +21,7 @@ export class NewRequestComponent {
   headers:string[]=['ID','First Name', 'Last Name', 'Age', 'Salary'];
   @ViewChild('csvReader') csvReader: any;
 
-  constructor(public userService: UserService, public tokenService: TokenStorageService, private router: Router){}
+  constructor(public userService: UserService, public tokenService: TokenStorageService, private router: Router, private matDialog: MatDialog){}
 
   fileChanged(e:any) {
       this.file = e.target.files[0];
@@ -85,23 +87,32 @@ export class NewRequestComponent {
   }  
 
   submit(){
-    this.userService.submitFileForApproval(this.file, this.tokenService.getUser().id).subscribe(
-      data => {
-        this.fileReset();
-        this.isSubmitSuccess = true;
-        setTimeout(() => {
-          this.isSubmitSuccess = false;
-          this.router.navigateByUrl("/home");
-        }, 2000);
-      },
-      error => {
-        console.error(error);
-        this.isSubmitFailure = true;
-        setTimeout(() => {
-          this.isSubmitFailure = false;
-        }, 2000);
+
+    let submitDialog = this.matDialog.open(SubmitDialogComponent);
+    submitDialog.afterClosed().subscribe(
+      result=> {
+        if(result === 'true'){
+          this.userService.submitFileForApproval(this.file, this.tokenService.getUser().id).subscribe(
+            data => {
+              this.fileReset();
+              this.isSubmitSuccess = true;
+              setTimeout(() => {
+                this.isSubmitSuccess = false;
+                this.router.navigateByUrl("/home");
+              }, 2000);
+            },
+            error => {
+              console.error(error);
+              this.isSubmitFailure = true;
+              setTimeout(() => {
+                this.isSubmitFailure = false;
+              }, 2000);
+            }
+          );
+        }
       }
     );
+    
   }
 
   fileDropped(file:any){

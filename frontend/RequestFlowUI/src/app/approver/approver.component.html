@@ -1,29 +1,168 @@
-<div class="requests-container" ng-app="requests App" ng-controller="requests controller">
-    <b>categories:</b>
-    <button (click)="changeCategory('INITIATED')">INITIATED</button>
-    <button (click)="changeCategory('INPROGRESS')">INPROGRESS</button>
-    <button (click)="changeCategory('APPROVED')">APPROVED</button>
-    <button (click)="changeCategory('REJECTED')">REJECTED</button>
-    <table class="minimalistBlack" *ngIf="requests.length > 0">    
-        <thead>    
-            <tr>    
-                <th>ID </th>    
-                <th>FILE NAME </th>    
-                <th>STATUS </th>    
-                <th>DATE </th>   
-            </tr>    
-        </thead>    
-        <tbody>  
-            <tr *ngFor="let request of requests">
-                <td> <span>{{request.id}}</span> </td>
-                <td> <span>{{request.fileName}} </span> </td>
-                <td> <span>{{request.status}} </span> </td>
-                <td> <span>{{request.date}} </span> </td>
-                <td>
-                    <button (click)="assignRequest(request)" *ngIf="!checkAssignee(request)">Assign to me</button>
-                    <button (click)="openRequest(request)" [routerLink]="['/viewRequest', request.id]" *ngIf="checkAssignee(request)">View Request</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div class="requests-container">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="end">
+        <mat-tab label="INITIATED">
+            <div
+            class="alert alert-warning"
+            role="alert"
+            *ngIf="intiatedRequests.length===0"
+            >
+            No new requests initiated
+            </div>
+            <table mat-table [dataSource]="intiatedRequests" *ngIf="intiatedRequests.length>0" class="mat-elevation-z8">
+
+                <ng-container matColumnDef="Id">
+                  <th mat-header-cell *matHeaderCellDef> Id </th>
+                  <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="File name">
+                  <th mat-header-cell *matHeaderCellDef> File name </th>
+                  <td mat-cell *matCellDef="let element"> {{element.fileName}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="Status">
+                  <th mat-header-cell *matHeaderCellDef> Status </th>
+                  <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="Date">
+                  <th mat-header-cell *matHeaderCellDef> Date </th>
+                  <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="View">
+                  <th mat-header-cell *matHeaderCellDef> View </th>
+                  <td mat-cell *matCellDef="let element"> 
+                  <a mat-raised-button color="primary" (click)="assignRequest(element)" *ngIf="!checkAssignee(element)">Assign to me</a>
+                  </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="initiatedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: initiatedColumns;"></tr>
+            </table> 
+        </mat-tab>
+        <mat-tab label="INPROGRESS">
+            <div
+            class="alert alert-warning"
+            role="alert"
+            *ngIf="inprogressRequests.length===0"
+            >
+            No assigned requests inprogress
+            </div>
+            <table mat-table [dataSource]="inprogressRequests" *ngIf="inprogressRequests.length>0" class="mat-elevation-z8">
+
+                <ng-container matColumnDef="Id">
+                  <th mat-header-cell *matHeaderCellDef> Id </th>
+                  <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="File name">
+                  <th mat-header-cell *matHeaderCellDef> File name </th>
+                  <td mat-cell *matCellDef="let element"> {{element.fileName}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="Status">
+                  <th mat-header-cell *matHeaderCellDef> Status </th>
+                  <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="Date">
+                  <th mat-header-cell *matHeaderCellDef> Date </th>
+                  <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="View">
+                  <th mat-header-cell *matHeaderCellDef> View </th>
+                  <td mat-cell *matCellDef="let element"> 
+                  <a mat-raised-button color="primary" (click)="openRequest(element)" *ngIf="checkAssignee(element)" [routerLink]="['/viewRequest', element.id]">view</a>
+                  </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="inprogressColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: inprogressColumns;"></tr>
+            </table> 
+        </mat-tab>
+        <mat-tab label="APPROVED">
+            <div
+            class="alert alert-warning"
+            role="alert"
+            *ngIf="approvedRequests.length===0"
+            >
+            No approved requests
+            </div>
+            <table mat-table [dataSource]="approvedRequests" *ngIf="approvedRequests.length>0" class="mat-elevation-z8">
+
+                <ng-container matColumnDef="Id">
+                  <th mat-header-cell *matHeaderCellDef> Id </th>
+                  <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="File name">
+                  <th mat-header-cell *matHeaderCellDef> File name </th>
+                  <td mat-cell *matCellDef="let element"> {{element.fileName}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="Status">
+                  <th mat-header-cell *matHeaderCellDef> Status </th>
+                  <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="Date">
+                  <th mat-header-cell *matHeaderCellDef> Date </th>
+                  <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="View">
+                  <th mat-header-cell *matHeaderCellDef> View </th>
+                  <td mat-cell *matCellDef="let element"> 
+                  <a mat-raised-button color="primary" (click)="openRequest(element)" [routerLink]="['/viewRequest', element.id]">view</a>
+                  </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="inprogressColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: inprogressColumns;"></tr>
+            </table> 
+        </mat-tab>
+        <mat-tab label="REJECTED">
+            <div
+            class="alert alert-warning"
+            role="alert"
+            *ngIf="rejectedRequests.length===0"
+            >
+            No rejected requests
+            </div>
+            <table mat-table [dataSource]="rejectedRequests" *ngIf="rejectedRequests.length>0" class="mat-elevation-z8">
+
+                <ng-container matColumnDef="Id">
+                  <th mat-header-cell *matHeaderCellDef> Id </th>
+                  <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="File name">
+                  <th mat-header-cell *matHeaderCellDef> File name </th>
+                  <td mat-cell *matCellDef="let element"> {{element.fileName}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="Status">
+                  <th mat-header-cell *matHeaderCellDef> Status </th>
+                  <td mat-cell *matCellDef="let element"> {{element.status}} </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="Date">
+                  <th mat-header-cell *matHeaderCellDef> Date </th>
+                  <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                </ng-container>
+        
+                <ng-container matColumnDef="View">
+                  <th mat-header-cell *matHeaderCellDef> View </th>
+                  <td mat-cell *matCellDef="let element"> 
+                  <a mat-raised-button color="primary" (click)="openRequest(element)" [routerLink]="['/viewRequest', element.id]">view</a>
+                  </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="inprogressColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: inprogressColumns;"></tr>
+            </table> 
+        </mat-tab>
+    </mat-tab-group>
 </div>

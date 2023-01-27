@@ -10,6 +10,7 @@
   <input type="file" style="display: none" #csvReader class="file-upload" accept=".csv" (change)="fileChanged($event)"/>
   
   <br>
+  <div class="drop-container">
   <div class="dropzone"
       appDrag
       (files)="fileDropped($event)"
@@ -29,6 +30,8 @@
     <button mat-raised-button class="upload-button" color="primary"  (click)="browseFiles()">Read content</button>
   </div>
   
+  </div>
+
   <div class="records-container" *ngIf="records.length>0">
   <table mat-table [dataSource]="records" class="mat-elevation-z8">
 

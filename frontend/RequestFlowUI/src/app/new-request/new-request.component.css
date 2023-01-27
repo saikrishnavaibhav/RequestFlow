@@ -9,10 +9,6 @@ button{
     float: right;
 }
 
-.dropzone-container{
-    width: 500px;
-}
-
 .dropzone{
     height: 150px;
     min-width: 100px;
@@ -22,14 +18,18 @@ button{
     border: dashed 1px #aaa;
     border-radius: 10px;
     margin-right: auto;
-    margin-left: auto;
     margin-bottom: 10px;
+}
+
+.drop-container{
+    width: fit-content;
+    display: flex;
+    align-items: center;
 }
 
 .upload-file{
     width: fit-content;
-    margin-right: auto;
-    margin-left: auto;
+    float: right;
     vertical-align: bottom;
 }
 

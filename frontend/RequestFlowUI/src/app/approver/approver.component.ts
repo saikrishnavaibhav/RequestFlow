@@ -11,10 +11,17 @@ import { UserService } from '../services/user.service';
   styleUrls: ['./approver.component.css']
 })
 export class ApproverComponent implements OnInit {
-  requests:Array<Request>=[];
-  allRequests:Array<Request>=[];
+  requests:Request[]=[];
+  intiatedRequests:Request[]=[];
+  inprogressRequests:Request[]=[];
+  approvedRequests:Request[]=[];
+  rejectedRequests:Request[]=[];
+  allRequests:Request[]=[];
   user:any=null;
   category:String="INITIATED";
+  initiatedColumns: string[] = ['Id', 'File name', 'Status', 'Date', 'Assign'];
+  inprogressColumns: string[] = ['Id', 'File name', 'Status', 'Date', 'View'];
+
   constructor(public userService: UserService, private tokenService: TokenStorageService, private requestService: RequestService, private router: Router){}
 
   ngOnInit(): void {
@@ -27,7 +34,13 @@ export class ApproverComponent implements OnInit {
         for(let req of requests){
           this.allRequests.push(req);
           if(req.status === 'INITIATED')
-            this.requests.push(req);
+            this.intiatedRequests.push(req);
+          else if(req.status === 'INPROGRESS')
+            this.inprogressRequests.push(req);
+          else if(req.status === 'APPROVED')
+            this.approvedRequests.push(req);
+          else if(req.status === 'REJECTED')
+            this.rejectedRequests.push(req);
         }
         console.log(this.requests);
       }, error => {
@@ -48,7 +61,9 @@ export class ApproverComponent implements OnInit {
           approverId : this.user.id,
           approver: this.user.firstName + ", " + this.user.lastName,
           status: "INPROGRESS"
+          
         }]
+       this.intiatedRequests =  this.intiatedRequests.filter(ir => ir.id !== request.id);
       },
       error=>{
       console.error(error);
