@@ -13,7 +13,7 @@ export class HomeComponent implements OnInit {
 
   userRequests:Request[]=[];
   user:any=null;
-  displayedColumns: string[] = ['ID', 'FILE NAME', 'STATUS', 'DATE'];
+  displayedColumns: string[] = ['Id', 'File name', 'Status', 'Date', 'View Request'];
   
   constructor(public userService: UserService, private tokenService: TokenStorageService, private requestService: RequestService, private router: Router){}
 
@@ -36,17 +36,21 @@ export class HomeComponent implements OnInit {
             approvals:req.approvals
           }
           this.userRequests.push(request);
+          this.filterRequests();
         }
         console.log(this.userRequests);
       }, error => {
         console.error(error);
       }
-    )
+    );
+  }
+  filterRequests() {
+    this.userRequests = this.userRequests.filter(ur => ur.fileName !== null && ur.userId !== null);
   }
 
   openRequest(request: any) {
     console.log(request);
-      this.requestService.setRequest(request);
+    this.requestService.setRequest(request);
   }
 
 }

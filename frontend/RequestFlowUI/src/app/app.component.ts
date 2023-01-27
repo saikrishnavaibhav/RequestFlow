@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { LogoutDialogComponent } from './logout-dialog/logout-dialog.component';
 import { TokenStorageService } from './services/token-storage.service';
 
 @Component({
@@ -14,7 +16,7 @@ export class AppComponent implements OnInit {
   username?: string;
   isApprover = false;
 
-  constructor(private tokenStorageService: TokenStorageService, private router: Router) { }
+  constructor(private tokenStorageService: TokenStorageService, private router: Router, private matDialog: MatDialog) { }
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
@@ -32,7 +34,16 @@ export class AppComponent implements OnInit {
   }
 
   logout(): void {
-    this.tokenStorageService.signOut();
-    window.location.reload();
+    
+    let logoutDialog = this.matDialog.open(LogoutDialogComponent);
+    logoutDialog.afterClosed().subscribe(
+      result=> {
+        if(result === 'true'){
+          this.tokenStorageService.signOut();
+          window.location.reload();
+        }
+      }
+    );
+    
   }
 }

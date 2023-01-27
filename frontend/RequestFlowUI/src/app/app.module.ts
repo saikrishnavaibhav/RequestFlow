@@ -16,6 +16,8 @@ import {MatTableModule} from '@angular/material/table';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import { DragDirective } from './drag.directive';
+import {MatDialogModule} from '@angular/material/dialog';
+import { LogoutDialogComponent } from './logout-dialog/logout-dialog.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import { DragDirective } from './drag.directive';
     HomeComponent,
     ApproverComponent,
     ViewrequestComponent,
-    DragDirective
+    DragDirective,
+    LogoutDialogComponent
 
   ],
   imports: [
@@ -37,8 +40,10 @@ import { DragDirective } from './drag.directive';
     BrowserAnimationsModule,
     MatTableModule,
     MatToolbarModule,
-    MatButtonModule
+    MatButtonModule,
+    MatDialogModule
   ],
+  entryComponents:[LogoutDialogComponent],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]
 })
