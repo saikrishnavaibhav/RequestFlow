@@ -1,30 +1,149 @@
 <div class="container">
+  <form
+  name="form"
+  (ngSubmit)="f.form.valid && signup()"
+  #f="ngForm"
+  novalidate
+  >
 
-    First name:<input type="text" [(ngModel)]="signupRequest.firstName">
-    <br>
-    Last name:<input type="text" [(ngModel)]="signupRequest.lastName">
-    <br>
-    User name:<input type="text" [(ngModel)]="signupRequest.userName">
-    <br>
-    Email Id:<input type="email" [(ngModel)]="signupRequest.emailId">
-    <br>
-    Password:<input type="text" [(ngModel)]="signupRequest.password">
-    <br>
-    <div class = 'form-role'>
-        <label for="role">Role</label>
-        <input
-          type="radio"
-          name="role"
-          value="requestor"
-          [(ngModel)]="signupRequest.role"
-        /> Requestor
-        <input
-          type="radio"
-          name="role"
-          value="approver"
-          [(ngModel)]="signupRequest.role"
-        /> Approver
-      </div>
-    <button (click)="signup()">Sign up</button>
+  <div class="form-group">
+    <label for="firstName">Enter First name</label>
+    <input
+    type="text"
+    class="form-control"
+    name="firstName"
+    [(ngModel)]="signupRequest.firstName"
+    minlength="3"
+    required
+    #firstName="ngModel"
+    />
+    <div
+    class="alert alert-danger"
+    role="alert"
+    *ngIf="firstName.errors && f.submitted"
+    >
+    Invalid first name(min. length 3)!
+  </div>
+  </div>
+
+  <div class="form-group">
+    <label for="lastName">Enter Last name</label>
+    <input
+    type="text"
+    class="form-control"
+    name="lastName"
+    [(ngModel)]="signupRequest.lastName"
+    minlength="3"
+    required
+    #lastName="ngModel"
+    />
+    <div
+    class="alert alert-danger"
+    role="alert"
+    *ngIf="lastName.errors && f.submitted"
+    >
+    Invalid Last name(min. length 3)!
+  </div>
+  </div>
+
+  <div class="form-group">
+    <label for="userName">Enter username</label>
+    <input
+    type="text"
+    class="form-control"
+    name="userName"
+    [(ngModel)]="signupRequest.userName"
+    minlength="3"
+    required
+    #userName="ngModel"
+    />
+    <div
+    class="alert alert-danger"
+    role="alert"
+    *ngIf="userName.errors && f.submitted"
+    >
+    Invalid user name(min. length 3)!
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="emailId">Enter email id</label>
+    <input
+    type="email"
+    class="form-control"
+    name="emailId"
+    [(ngModel)]="signupRequest.emailId"
+    required
+    #emailId="ngModel"
+    />
+    <div
+    class="alert alert-danger"
+    role="alert"
+    *ngIf="emailId.errors && f.submitted"
+    >
+    Invalid emailId!
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label for="password">Enter password</label>
+    <input
+    type="password"
+    class="form-control"
+    name="password"
+    [(ngModel)]="signupRequest.password"
+    required
+    #password="ngModel"
+    />
+    <div
+    class="alert alert-danger"
+    role="alert"
+    *ngIf="password.errors && f.submitted"
+    >
+    Invalid password!
+    </div>
+  </div>
+
+  <div class = 'form-role'>
+    <label for="role">Role</label>
+    <input
+      type="radio"
+      name="role"
+      value="requestor"
+      [(ngModel)]="signupRequest.role"
+    /> Requestor
+    <input
+      type="radio"
+      name="role"
+      value="approver"
+      [(ngModel)]="signupRequest.role"
+    /> Approver
+  </div>
+
+  <div class="form-group">
+    <button mat-raised-button
+     color="primary" 
+     class="login-button">
+     Sign up
+    </button>
+  </div>
+
+  <div class="form-group">
+    <div
+    class="alert alert-success"
+    role="alert"
+    *ngIf="f.submitted && isSignupSuccess"
+    >
+    Signup Success
+    </div>
+    <div
+    class="alert alert-danger"
+    role="alert"
+    *ngIf="f.submitted && isSignupFailed"
+    >
+    Signup failed
+    </div>
+  </div>
+</form>
 
 </div>

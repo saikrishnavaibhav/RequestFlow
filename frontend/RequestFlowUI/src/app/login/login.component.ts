@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenStorageService } from '../services/token-storage.service';
@@ -43,8 +44,7 @@ export class LoginComponent {
         this.roles = this.tokenStorage.getUser().roles;
         this.loadProfile();
       },
-      err => {
-        this.errorMessage = err.error.message;
+      error => {
         this.isLoginFailed = true;
       }
     );

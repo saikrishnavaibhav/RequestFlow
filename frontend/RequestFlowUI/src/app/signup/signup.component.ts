@@ -10,6 +10,8 @@ import { UserService } from '../services/user.service';
 export class SignupComponent {
 
   signupRequest = new SignupRequest();
+  isSignupFailed = false;
+  isSignupSuccess = false;
 
   constructor(public userService:UserService,private router: Router){}
 
@@ -17,11 +19,19 @@ export class SignupComponent {
     console.log(this.signupRequest);
     this.userService.signUpUser(this.signupRequest).subscribe(
       data=> {
-        console.log("success");
-        this.router.navigateByUrl("/login");
+        this.isSignupSuccess = true;
+        setTimeout(() => {
+          this.isSignupSuccess = false;
+          this.router.navigateByUrl("/login");
+        }, 2000);
+        console.log("signup success");
       },
       error=> {
         console.error("invalid request");
+        this.isSignupFailed = true;
+        setTimeout(() => {
+          this.isSignupFailed = false;
+        }, 2000);
       }
     );
   }

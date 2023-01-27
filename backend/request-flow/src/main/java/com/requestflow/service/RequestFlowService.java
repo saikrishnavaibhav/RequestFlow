@@ -80,34 +80,25 @@ public class RequestFlowService {
 	private RequestResponse getRequestResponse(RequestEntity re) {
 		RequestResponse requestResponse = new RequestResponse();
 		requestResponse.setId(re.getId());
-
-		@SuppressWarnings("deprecation")
-		String date = "" + re.getDate().getDate() + "-" + re.getDate().getMonth() + 1 + "-"
-				+ re.getDate().getYear();
-		requestResponse.setDate(date);
-
-		// requestResponse.setFile(re.getFile());
-
+		requestResponse.setDate(re.getDate().toLocalDateTime().toLocalDate().toString());
 		InputStream is = new ByteArrayInputStream(re.getFile());
 		List<String> stringFromBytes = streamToString(is, StandardCharsets.UTF_8);
-		System.out.println("String recreated from bytes : " + stringFromBytes);
-
+		
 		requestResponse.setFile(stringFromBytes);
 		requestResponse.setFileName(re.getFileName());
 		requestResponse.setStatus(re.getStatus());
 		requestResponse.setApprovals(re.getApprovals());
+		requestResponse.setUserId(re.getUserId());
 		return requestResponse;
 }
 	
 	public List<String> streamToString(InputStream is, Charset encoding) {
 		BufferedReader br = new BufferedReader(new InputStreamReader(is, encoding));
-		StringBuilder sb = new StringBuilder(1024);
 		List<String> data = new ArrayList<>();
 		try {
 			String line = br.readLine();
 			while (line != null) {
 				data.add(line);
-				sb.append(line).append("\n");
 				line = br.readLine();
 			}
 		} catch (IOException io) {

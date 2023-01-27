@@ -1,4 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { TokenStorageService } from '../services/token-storage.service';
 import { UserService } from '../services/user.service';
 
@@ -18,7 +19,7 @@ export class NewRequestComponent {
   headers:string[]=['ID','First Name', 'Last Name', 'Age', 'Salary'];
   @ViewChild('csvReader') csvReader: any;
 
-  constructor(public userService: UserService, public tokenService: TokenStorageService){}
+  constructor(public userService: UserService, public tokenService: TokenStorageService, private router: Router){}
 
   fileChanged(e:any) {
       this.file = e.target.files[0];
@@ -57,7 +58,6 @@ export class NewRequestComponent {
   }  
   
   getDataRecordsArrayFromCSVFile(csvRecordsArray: any) {  
-    console.log(csvRecordsArray);
     let csvArr:CSVRecord[] = [];  
     for (let i = 1; i < csvRecordsArray.length; i++) {  
       if(csvRecordsArray[i] !== ''){
@@ -87,12 +87,11 @@ export class NewRequestComponent {
   submit(){
     this.userService.submitFileForApproval(this.file, this.tokenService.getUser().id).subscribe(
       data => {
-        console.log("success");
-        console.log(data);
         this.fileReset();
         this.isSubmitSuccess = true;
         setTimeout(() => {
           this.isSubmitSuccess = false;
+          this.router.navigateByUrl("/home");
         }, 2000);
       },
       error => {

@@ -68,8 +68,9 @@ public class RequestFlowRestController {
 		return ResponseEntity.ok(new LoginResponse(jwt, 
 												 userDetails.getId(), 
 												 userDetails.getUsername(), 
-												 userDetails.getEmail(), 
-												 userDetails.getPhoneNumber(),
+												 userDetails.getFirstName(),
+												 userDetails.getLastName(),
+												 userDetails.getEmail(),
 												 roles));
 	}
 	

@@ -7,25 +7,19 @@ public class LoginResponse {
 	private String type = "Bearer";
 	private Long id;
 	private String userName;
+	private String firstName;
+	private String lastName;
 	private String emailId;
-	private String phoneNumber;
 	private List<String> roles;
 	
 
-	public LoginResponse(String accessToken, Long id, String username, String email, List<String> roles) {
+	public LoginResponse(String accessToken, Long id, String username,String firstname,String lastname, String email, List<String> roles) {
 		this.token = accessToken;
 		this.id = id;
 		this.userName = username;
+		this.firstName = firstname;
+		this.lastName = lastname;
 		this.emailId = email;
-		this.roles = roles;
-	}
-
-	public LoginResponse(String accessToken, Long id, String username, String email,String phoneNumber, List<String> roles) {
-		this.token = accessToken;
-		this.id = id;
-		this.userName = username;
-		this.emailId = email;
-		this.phoneNumber = phoneNumber;
 		this.roles = roles;
 	}
 
@@ -69,13 +63,24 @@ public class LoginResponse {
 		this.userName = username;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public List<String> getRoles() {
 		return roles;
 	}
-
 
 }

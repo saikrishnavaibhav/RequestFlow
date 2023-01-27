@@ -1,10 +1,10 @@
 <div class="requests-container" ng-app="requests App" ng-controller="requests controller">
-    <h5 *ngIf="userRequests.length>0">Requests created by {{user.username}}</h5>
+    <h1 *ngIf="userRequests.length>0">Requests created by {{user.username}}</h1>
     <div class="alert alert-warning" *ngIf="userRequests.length==0">
       {{user.username}} haven't created any requests yet
     </div>
 
-    <table mat-table [dataSource]="userRequests" class="mat-elevation-z8">
+    <table mat-table [dataSource]="userRequests" *ngIf="userRequests.length>0" class="mat-elevation-z8">
 
         <ng-container matColumnDef="Id">
           <th mat-header-cell *matHeaderCellDef> Id </th>

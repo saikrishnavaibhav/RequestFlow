@@ -16,10 +16,12 @@ public class UserDetailsImpl implements UserDetails {
 	private Long id;
 
 	private String username;
+	
+	private String firstName;
+	
+	private String lastName;
 
 	private String email;
-	
-	private String phoneNumber;
 
 	@JsonIgnore
 	private String password;
@@ -27,10 +29,12 @@ public class UserDetailsImpl implements UserDetails {
 	private Collection<? extends GrantedAuthority> authorities;
 	
 
-	public UserDetailsImpl(Long id, String username, String email, String password,
+	public UserDetailsImpl(Long id, String username, String firstname, String lastname, String email, String password,
 			Collection<? extends GrantedAuthority> authorities) {
 		this.id = id;
 		this.username = username;
+		this.firstName = firstname;
+		this.lastName = lastname;
 		this.email = email;
 		this.password = password;
 		this.authorities = authorities;
@@ -43,7 +47,9 @@ public class UserDetailsImpl implements UserDetails {
 
 		return new UserDetailsImpl(
 				user.getId(), 
-				user.getUserName(), 
+				user.getUserName(),
+				user.getFirstName(),
+				user.getLastName(),
 				user.getEmailId(),
 				user.getPassword(),
 				authorities);
@@ -71,11 +77,15 @@ public class UserDetailsImpl implements UserDetails {
 	public String getUsername() {
 		return username;
 	}
-
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
 	
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
@@ -102,7 +112,7 @@ public class UserDetailsImpl implements UserDetails {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(authorities, email, id, password, phoneNumber, username);
+		return Objects.hash(authorities, email, id, password, username, firstName, lastName);
 	}
 
 	@Override
@@ -116,6 +126,6 @@ public class UserDetailsImpl implements UserDetails {
 		UserDetailsImpl other = (UserDetailsImpl) obj;
 		return Objects.equals(authorities, other.authorities) && Objects.equals(email, other.email)
 				&& Objects.equals(id, other.id) && Objects.equals(password, other.password)
-				&& Objects.equals(phoneNumber, other.phoneNumber) && Objects.equals(username, other.username);
+				&& Objects.equals(firstName, other.firstName) && Objects.equals(lastName, other.lastName) && Objects.equals(username, other.username);
 	}
 }

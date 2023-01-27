@@ -10,7 +10,7 @@
   <input type="file" style="display: none" #csvReader class="file-upload" accept=".csv" (change)="fileChanged($event)"/>
   
   <br>
-<div class="dropzone"
+  <div class="dropzone"
       appDrag
       (files)="fileDropped($event)"
       >
@@ -22,12 +22,13 @@
         </div>
       </div>
   </div>
-
-  <div class="upload-file">
-    <span class="upload-button">{{fileName}}</span>
-    <button mat-raised-button class="upload-button" color="primary"  (click)="browseFiles()">upload</button>
+    
+  <div class="upload-file" *ngIf="fileName !== ''">
+    <span mat-flat-button class="upload-button">Selected file: {{fileName}}</span>
+    <br>
+    <button mat-raised-button class="upload-button" color="primary"  (click)="browseFiles()">Read content</button>
   </div>
-
+  
   <div class="records-container" *ngIf="records.length>0">
   <table mat-table [dataSource]="records" class="mat-elevation-z8">
 

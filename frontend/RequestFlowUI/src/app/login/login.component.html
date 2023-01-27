@@ -13,6 +13,7 @@
         class="form-control"
         name="userName"
         [(ngModel)]="loginRequest.userName"
+        minlength="3"
         required
         #userName="ngModel"
         />
@@ -21,7 +22,7 @@
         role="alert"
         *ngIf="userName.errors && f.submitted"
         >
-        Username is required!
+        Invalid Username!
         </div>
     </div>
     <div class="form-group">
@@ -40,11 +41,11 @@
         role="alert"
         *ngIf="password.errors && f.submitted"
         >
-        Invalid password
+        Invalid password!
         </div>
     </div>
     <div class="form-group">
-        <button class="btn btn-primary btn-block">
+        <button mat-raised-button color="primary" class="login-button">
         Login
         </button>
     </div>
@@ -54,7 +55,7 @@
         role="alert"
         *ngIf="f.submitted && isLoginFailed"
         >
-        Login failed {{errorMessage}}
+        Login failed
         </div>
     </div>
     </form>
