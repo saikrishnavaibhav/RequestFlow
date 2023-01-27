@@ -5,6 +5,13 @@
   <br>
   <b>File name:</b>&nbsp;{{request.fileName}}
   <br>
+  <b>Request status:</b>&nbsp;{{request.status}}
+  <br>
+  <div *ngFor="let approver of request.approvals">
+    <b>Approver name:</b> &nbsp; {{approver.approver}} 
+    &nbsp;&nbsp;&nbsp;
+    <b>Status :</b> &nbsp; {{approver.status}}
+  </div>
   <b>File Data:</b>
   <br>
   <table class="minimalistBlack" *ngIf="records.length > 0">    
@@ -28,7 +35,7 @@
       role="alert"
       *ngIf="showSuccess || approved"
       >
-      Request Approved
+      {{successMessage}}
     </div>
     <div
       class="alert alert-danger"

@@ -1,4 +1,50 @@
-th,td{
+th,td {
     padding-left: 10px;
     padding-right: 10px;
+}
+
+button{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    float: right;
+}
+
+.dropzone-container{
+    width: 500px;
+}
+
+.dropzone{
+    height: 150px;
+    min-width: 100px;
+    display: table;
+    background-color: #eee;
+    width: 300px;
+    border: dashed 1px #aaa;
+    border-radius: 10px;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+
+.upload-file{
+    display: flex;
+    width: 300px;
+    vertical-align: bottom;
+}
+
+.upload-button{
+    margin-left: auto;
+}
+
+.drop-text{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.drop-text-div{
+    text-align: center;
+}
+
+.browse-button{
+    color: blue;
+    cursor: pointer;
 }

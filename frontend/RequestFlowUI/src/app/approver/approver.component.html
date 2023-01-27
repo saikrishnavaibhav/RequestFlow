@@ -1,4 +1,9 @@
 <div class="requests-container" ng-app="requests App" ng-controller="requests controller">
+    <b>categories:</b>
+    <button (click)="changeCategory('INITIATED')">INITIATED</button>
+    <button (click)="changeCategory('INPROGRESS')">INPROGRESS</button>
+    <button (click)="changeCategory('APPROVED')">APPROVED</button>
+    <button (click)="changeCategory('REJECTED')">REJECTED</button>
     <table class="minimalistBlack" *ngIf="requests.length > 0">    
         <thead>    
             <tr>    

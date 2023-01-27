@@ -11,8 +11,9 @@ import { UserService } from '../services/user.service';
 })
 export class HomeComponent implements OnInit {
 
-  userRequests:Array<Request>=[];
+  userRequests:Request[]=[];
   user:any=null;
+  displayedColumns: string[] = ['ID', 'FILE NAME', 'STATUS', 'DATE'];
   
   constructor(public userService: UserService, private tokenService: TokenStorageService, private requestService: RequestService, private router: Router){}
 
@@ -25,7 +26,16 @@ export class HomeComponent implements OnInit {
       data => {
         let requests:any = data;
         for(let req of requests){
-          this.userRequests.push(req);
+          let request:Request={
+            id:req.id,
+            date:req.date,
+            userId:req.userId,
+            file:req.file,
+            fileName:req.fileName,
+            status:req.status,
+            approvals:req.approvals
+          }
+          this.userRequests.push(request);
         }
         console.log(this.userRequests);
       }, error => {
@@ -41,12 +51,12 @@ export class HomeComponent implements OnInit {
 
 }
 
-export class Request{
-  id:any;
-  date:any;
-  userId:any;
+export interface Request{
+  id:number;
+  date:string;
+  userId:number;
   file:any;
-  fileName:any;
-  status:any;
+  fileName:string;
+  status:string;
   approvals:any;
 }

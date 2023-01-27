@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { TokenStorageService } from './services/token-storage.service';
 
 @Component({
@@ -13,7 +14,7 @@ export class AppComponent implements OnInit {
   username?: string;
   isApprover = false;
 
-  constructor(private tokenStorageService: TokenStorageService) { }
+  constructor(private tokenStorageService: TokenStorageService, private router: Router) { }
 
   ngOnInit(): void {
     this.isLoggedIn = !!this.tokenStorageService.getToken();
@@ -25,6 +26,8 @@ export class AppComponent implements OnInit {
       if(this.roles[0] === 'ROLE_APPROVER'){
         this.isApprover = true;
       }
+    } else {
+      this.router.navigateByUrl('/login')
     }
   }
 

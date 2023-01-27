@@ -6,15 +6,7 @@ import { Request } from '../home/home.component';
 })
 export class RequestService {
 
-  request:Request = {
-  id: null,
-  date:null,
-  userId:null,
-  file:null,
-  fileName:null,
-  status:null,
-  approvals:null
-  }
+  request:any;
   constructor() { }
 
   setRequest(request: Request){

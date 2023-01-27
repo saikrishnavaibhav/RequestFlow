@@ -1,4 +1,21 @@
+<mat-toolbar color="primary">
+  <span *ngIf="!isLoggedIn">RequestFlow Application</span>
+  <a mat-button *ngIf="isLoggedIn && !isApprover" routerLink="home">Home</a>
+  <a mat-button *ngIf="isLoggedIn && isApprover" routerLink="approver">Home</a>
+  <span class="toolbar-spacer"></span>
+  <a mat-raised-button color="accent" *ngIf="!isLoggedIn" routerLink="signup">Sign Up</a>
+  <a mat-raised-button color="accent" *ngIf="!isLoggedIn" routerLink="login">Login</a>
+  <a mat-raised-button color="accent" *ngIf="isLoggedIn && !isApprover" routerLink="newRequest">New Request</a>
+  <a mat-raised-button color="warn" *ngIf="isLoggedIn" (click)="logout()">Logout</a>
+</mat-toolbar>
+<div class="container">
+  <router-outlet></router-outlet>
+</div>
+
+<!-- 
 <div id="app">
+  
+  
   <nav class="navbar navbar-expand navbar-dark bg-dark">
     <ul class="navbar-nav mr-auto" routerLinkActive="active">
       <li class="nav-item" *ngIf="!isApprover">
@@ -32,4 +49,4 @@
   <div class="container">
     <router-outlet></router-outlet>
   </div>
-</div>
+</div> -->

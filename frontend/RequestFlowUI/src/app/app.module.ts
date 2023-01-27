@@ -11,6 +11,11 @@ import { HomeComponent } from './home/home.component';
 import { ApproverComponent } from './approver/approver.component';
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
 import { ViewrequestComponent } from './viewrequest/viewrequest.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatTableModule} from '@angular/material/table';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatButtonModule} from '@angular/material/button';
+import { DragDirective } from './drag.directive';
 
 @NgModule({
   declarations: [
@@ -20,13 +25,19 @@ import { ViewrequestComponent } from './viewrequest/viewrequest.component';
     NewRequestComponent,
     HomeComponent,
     ApproverComponent,
-    ViewrequestComponent
+    ViewrequestComponent,
+    DragDirective
+
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule,
+    MatTableModule,
+    MatToolbarModule,
+    MatButtonModule
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Request } from '../home/home.component';
-import { CSVRecord } from '../new-request/new-request.component';
 import { RequestService } from '../services/request.service';
 import { TokenStorageService } from '../services/token-storage.service';
 import { UserService } from '../services/user.service';
@@ -16,15 +15,9 @@ export class ViewrequestComponent implements OnInit {
   showSuccess = false;
   showFailed = false;
   notApproved = false;
-  request: Request={
-    id: null,
-    date:null,
-    userId:null,
-    file:null,
-    fileName:null,
-    status:null,
-    approvals:null,
-  }
+  successMessage = "";
+  failureMessage = "";
+  request: any;
 
   records:any[]=[];
   header:any[]=[];
@@ -66,7 +59,15 @@ export class ViewrequestComponent implements OnInit {
         console.log(data);
         this.approved = true;
         this.showSuccess = true;
-
+        if(approve){
+          this.successMessage = "Request Approved";
+          this.request.status = "APPROVED";
+          this.request.approvals[0].status = "APPROVED";
+        } else{
+          this.successMessage = "Request Rejected";
+          this.request.status = "REJECTED"
+          this.request.approvals[0].status = "REJECTED";
+        }
         setTimeout(() => {
           this.showSuccess=false;
         }, 2000);
@@ -74,6 +75,10 @@ export class ViewrequestComponent implements OnInit {
       error=>{
       console.error(error);
       this.showFailed = true;
+      if(approve)
+        this.failureMessage = "Request Approve failed";
+      else
+        this.failureMessage = "Request Reject failed";
 
         setTimeout(() => {
           this.showFailed=false;

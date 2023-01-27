@@ -12,8 +12,9 @@ import { UserService } from '../services/user.service';
 })
 export class ApproverComponent implements OnInit {
   requests:Array<Request>=[];
+  allRequests:Array<Request>=[];
   user:any=null;
-
+  category:String="INITIATED";
   constructor(public userService: UserService, private tokenService: TokenStorageService, private requestService: RequestService, private router: Router){}
 
   ngOnInit(): void {
@@ -24,7 +25,9 @@ export class ApproverComponent implements OnInit {
       data => {
         let requests:any = data;
         for(let req of requests){
-          this.requests.push(req);
+          this.allRequests.push(req);
+          if(req.status === 'INITIATED')
+            this.requests.push(req);
         }
         console.log(this.requests);
       }, error => {
@@ -42,7 +45,9 @@ export class ApproverComponent implements OnInit {
       data=> {
         request.status="INPROGRESS"
         request.approvals = [{
-          approverId : this.user.id
+          approverId : this.user.id,
+          approver: this.user.firstName + ", " + this.user.lastName,
+          status: "INPROGRESS"
         }]
       },
       error=>{
@@ -58,9 +63,15 @@ export class ApproverComponent implements OnInit {
       if(approver.approverId === this.user.id){
         return true;
       }
-    }
-    
+    }  
     return false;
+  }
+
+  changeCategory(category: String){
+    this.category = category;
+    this.requests = this.allRequests
+    .filter( req => req.status === category) ;
+
   }
 
 }
