@@ -20,9 +20,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.requestflow.entities.ApprovalEntity;
+import com.requestflow.entities.NotificationEntity;
 import com.requestflow.entities.RequestEntity;
 import com.requestflow.entities.Role;
 import com.requestflow.entities.UserEntity;
+import com.requestflow.repositories.NotificationsRepository;
 import com.requestflow.repositories.RequestRepository;
 import com.requestflow.repositories.RoleRepository;
 import com.requestflow.repositories.UserRepository;
@@ -44,6 +46,9 @@ public class RequestFlowService {
 	
 	@Autowired
 	RoleRepository roleRepository;
+	
+	@Autowired
+	NotificationsRepository notificationsRepository;
 	
 	@Autowired
 	PasswordEncoder encoder;
@@ -201,8 +206,37 @@ public class RequestFlowService {
 		});
 		requestEntity.setApprovals(approvalEntities);
 		requestRepository.save(requestEntity);
+		addNotificationToUser(requestEntity.getUserId(), requestId,requestEntity.getStatus().name().toString());
 		
 		return ResponseEntity.ok(requestEntity);
+	}
+
+	private void addNotificationToUser(long userId, Long requestId, String status) {
+		NotificationEntity notification = new NotificationEntity();
+		notification.setRequestId(requestId);
+		notification.setUserId(userId);
+		notification.setStatus(status);
+		notification.setRead(false);
+		
+		notificationsRepository.save(notification);
+		
+		
+	}
+
+	public ResponseEntity<?> retrieveNotifications(long userId) {
+		List<NotificationEntity> notifications = notificationsRepository.findAllByUserId(userId);
+		System.out.println(notifications);
+		return ResponseEntity.ok(notifications);
+	}
+
+	public ResponseEntity<?> readNotification(long notificationId) {
+		NotificationEntity notificationEntity = notificationsRepository.findById(notificationId).orElse(null);
+		if(notificationEntity == null) {
+			return ResponseEntity.badRequest().build();
+		}
+		notificationEntity.setRead(true);
+		notificationsRepository.save(notificationEntity);
+		return ResponseEntity.ok().build();
 	}
 
 //	public ResponseEntity<?> rejectRequest(Long requestId) {

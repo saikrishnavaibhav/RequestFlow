@@ -20,6 +20,10 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { LogoutDialogComponent } from './logout-dialog/logout-dialog.component';
 import { SubmitDialogComponent } from './submit-dialog/submit-dialog.component';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatIconModule} from '@angular/material/icon';
+import {MatBadgeModule} from '@angular/material/badge';
+import { NotificationsComponent } from './notifications/notifications.component';
+import {MatListModule} from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -32,7 +36,8 @@ import {MatTabsModule} from '@angular/material/tabs';
     ViewrequestComponent,
     DragDirective,
     LogoutDialogComponent,
-    SubmitDialogComponent
+    SubmitDialogComponent,
+    NotificationsComponent
 
   ],
   imports: [
@@ -45,9 +50,12 @@ import {MatTabsModule} from '@angular/material/tabs';
     MatToolbarModule,
     MatButtonModule,
     MatDialogModule,
-    MatTabsModule
+    MatTabsModule,
+    MatIconModule,
+    MatBadgeModule,
+    MatListModule
   ],
-  entryComponents:[LogoutDialogComponent],
+  entryComponents:[LogoutDialogComponent, NotificationsComponent, SubmitDialogComponent],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]
 })

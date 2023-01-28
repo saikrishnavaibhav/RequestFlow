@@ -1,4 +1,7 @@
 <div class="component">
+  <button mat-icon-button (click)="back()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
   <div class="req">
     <div class="req-details">
       <p><b>Request Id:</b> &nbsp;{{request.id}}</p>
@@ -48,8 +51,7 @@
   </table> 
   
   <div *ngIf="isApprover">
-    <button mat-raised-button color="warn"  *ngIf="showReject">REJECT</button>
-    <!-- (click)="approve(false)" -->
+    <button mat-raised-button color="warn" (click)="approve(false)" *ngIf="showReject">REJECT</button>
     <button mat-raised-button color="primary" (click)="approve(true)" *ngIf="showApprove">APPROVE</button>
     <div
       class="alert alert-success"

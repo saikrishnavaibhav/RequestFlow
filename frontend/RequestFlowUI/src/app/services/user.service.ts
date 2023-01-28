@@ -50,5 +50,17 @@ export class UserService {
     return this.http.post(apiUrl + 'approveRequest',null, {params:queryParams});
   }
 
+  retrieveNotifications(userId: number){
+		let queryParams = new HttpParams();
+    queryParams = queryParams.append("userId",userId);
+    return this.http.get(apiUrl + 'retrieveNotifications',{params:queryParams});
+	}
+
+  readNotification(notificationtId: number){
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("notificationtId",notificationtId);
+    return this.http.put(apiUrl + 'readNotification',null, {params:queryParams});
+  }
+
   constructor(private http: HttpClient) { }
 }

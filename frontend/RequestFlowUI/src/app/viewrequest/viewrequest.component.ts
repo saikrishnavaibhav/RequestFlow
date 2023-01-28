@@ -4,6 +4,7 @@ import { CSVRecord } from '../new-request/new-request.component';
 import { RequestService } from '../services/request.service';
 import { TokenStorageService } from '../services/token-storage.service';
 import { UserService } from '../services/user.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-viewrequest',
@@ -26,7 +27,8 @@ export class ViewrequestComponent implements OnInit {
   role:any[]=[];
   headers:string[]=['ID','First Name', 'Last Name', 'Age', 'Salary'];
 
-  constructor(private requestService: RequestService, private tokenService: TokenStorageService, private userService: UserService){}
+  constructor(private requestService: RequestService, private tokenService: TokenStorageService,
+     private userService: UserService, private location: Location){}
   
   ngOnInit(): void {
     this.request = this.requestService.getRequest();
@@ -109,6 +111,10 @@ export class ViewrequestComponent implements OnInit {
   showApproveRejectTrue(){
     this.showFailed = true;
     this.showApprove = true;
+  }
+
+  back(){
+    this.location.back();
   }
   
 }

@@ -1,0 +1,9 @@
+<div class="component">
+    
+    <mat-list role="list">
+        <mat-list-item role="listitem" *ngFor="let n of notifications">
+            <span>Request with Id {{n.id}} has been {{n.status}}</span>
+            <button mat-raised-button color="primary">mark as read</button>
+        </mat-list-item>
+      </mat-list>
+</div>

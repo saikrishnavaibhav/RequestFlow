@@ -5,48 +5,12 @@
   <span class="toolbar-spacer"></span>
   <a mat-raised-button color="accent" *ngIf="!isLoggedIn" routerLink="signup">Sign Up</a>
   <a mat-raised-button color="accent" *ngIf="!isLoggedIn" routerLink="login">Login</a>
+  <a mat-icon-button *ngIf="isLoggedIn && !isApprover" (click)="showNotifications()">
+    <mat-icon matBadge="{{notificationCount}}" matBadgeColor="warn">notifications</mat-icon>
+  </a>
   <a mat-raised-button color="accent" *ngIf="isLoggedIn && !isApprover" routerLink="newRequest">New Request</a>
   <a mat-raised-button color="warn" *ngIf="isLoggedIn" (click)="logout()">Logout</a>
 </mat-toolbar>
 <div class="container">
   <router-outlet></router-outlet>
 </div>
-
-<!-- 
-<div id="app">
-  
-  
-  <nav class="navbar navbar-expand navbar-dark bg-dark">
-    <ul class="navbar-nav mr-auto" routerLinkActive="active">
-      <li class="nav-item" *ngIf="!isApprover">
-        <a href="/home" class="nav-link" routerLink="home">Home </a>
-      </li>
-      <li class="nav-item" *ngIf="isApprover">
-        <a href="/approver" class="nav-link" routerLink="approver">Home </a>
-      </li>
-    </ul>
-
-    <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn">
-      <li class="nav-item">
-        <a href="/signup" class="nav-link" routerLink="signup">Sign Up</a>
-      </li>
-      <li class="nav-item">
-        <a href="/login" class="nav-link" routerLink="login">Login</a>
-      </li>
-    </ul>
-
-    <ul class="navbar-nav ml-auto" *ngIf="isLoggedIn">
-      <li class="nav-item" *ngIf="!isApprover">
-        <a href="/newRequest" class="nav-link" routerLink="newRequest" >New Request</a>
-      </li>
-
-      <li class="nav-item">
-        <a href class="nav-link" (click)="logout()">Logout</a>
-      </li>
-    </ul>
-  </nav>
-
-  <div class="container">
-    <router-outlet></router-outlet>
-  </div>
-</div> -->

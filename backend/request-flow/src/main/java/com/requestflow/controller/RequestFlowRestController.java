@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -113,6 +114,20 @@ public class RequestFlowRestController {
 	public ResponseEntity<?> approveRequest(@RequestParam("requestId") Long requestId, @RequestParam("userId") long userId, @RequestParam("approve") boolean approve) throws Exception{
 		return requestFlowService.approveRequest(requestId, userId, approve);
 	}
+	
+	@PreAuthorize("hasRole('REQUESTOR')")
+	@GetMapping("/retrieveNotifications")
+	public ResponseEntity<?> retrieveNotifications(@RequestParam("userId") long userId){
+		return requestFlowService.retrieveNotifications(userId);
+	}
+	
+	@PreAuthorize("hasRole('REQUESTOR')")
+	@PutMapping("/readNotification")
+	public ResponseEntity<?> readNotification(@RequestParam("notificationId") long notificationId){
+		return requestFlowService.readNotification(notificationId);
+	}
+	
+	
 	
 //	@PostMapping("/reject")
 //	public ResponseEntity<?> rejectRequest(@RequestParam("requestId") Long requestId, @RequestParam("userId") long userId){
