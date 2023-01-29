@@ -1,8 +1,8 @@
 package com.requestflow.entities;
 
+import javax.persistence.*;
 import com.requestflow.utils.ApprovalEnum;
 
-import jakarta.persistence.*;
 
 @Entity
 @Table(name = "approvals")

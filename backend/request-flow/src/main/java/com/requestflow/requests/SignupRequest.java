@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.requestflow.validations.ValidPassword;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern.Flag;
-import jakarta.validation.constraints.Size;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern.Flag;
+import javax.validation.constraints.Size;
 
 
 public class SignupRequest {

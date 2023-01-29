@@ -2,7 +2,7 @@ package com.requestflow.entities;
 
 import com.requestflow.utils.Roles;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 
 @Entity
 @Table(name="Roles")
