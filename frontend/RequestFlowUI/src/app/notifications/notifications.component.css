@@ -2,3 +2,7 @@ span,button{
 padding-left: 15px;
 padding-right: 15px;
 }
+
+button{
+    margin-right: auto;
+}

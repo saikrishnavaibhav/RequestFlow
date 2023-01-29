@@ -2,19 +2,38 @@ package com.requestflow.requests;
 
 import java.util.List;
 
+import com.requestflow.validations.ValidPassword;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern.Flag;
+import jakarta.validation.constraints.Size;
+
+
 public class SignupRequest {
 	
+	@NotBlank(message = "firstName must not be empty")
+    @Size(min = 3, max = 20, message = "length must be between 3 to 20 characters")
 	private String firstName;
 	
+	@NotBlank(message = "lastName must not be empty")
+    @Size(min = 3, max = 20, message = "length must be between 3 to 20 characters")
 	private String lastName;
 	
+	@NotBlank(message = "userName must not be empty")
+    @Size(min = 3, max = 20, message = "length must be between 3 to 20 characters")
 	private String userName;
 	
 	private String role;
 	
+	@NotBlank(message = "emailId must not be empty")
+    @Size(max = 50)
+    @Email(regexp = "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,3}",
+            flags = Flag.CASE_INSENSITIVE, message = "please enter valid emailId")
 	private String emailId;
 	
-	private String password;
+	@ValidPassword
+    private String password;
 	
 	private List<String> roles;
 

@@ -1,6 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Notification } from '../app.component';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-notifications',
@@ -10,12 +13,31 @@ import { Notification } from '../app.component';
 export class NotificationsComponent implements OnInit{
 
   notifications:Notification[] = [];
-  constructor( @Inject(MAT_DIALOG_DATA) private data: Notification[]){}
+  position = new FormControl('left');
+  displayedColumns = ['Notifications', 'Mark as read'];
+
+  constructor( @Inject(MAT_DIALOG_DATA) private data: Notification[], private userService: UserService, private matScnakBar: MatSnackBar){}
   
   ngOnInit(): void {
     this.notifications = this.data;
-    console.log("nots");
-    console.log(this.notifications);
-    this.notifications.forEach(not => console.log(not.id));
+  }
+
+  readNotification(notification: Notification){
+    this.userService.readNotification(notification.id).subscribe(
+      data=>{
+        console.log("Notification marked as read");
+        //this.showSnakBar()
+        this.notifications.map(n => {
+          if(n.id === notification.id){
+            n.read = true;
+          }
+        });
+      },
+      error=> {
+        
+      }
+    );
+  }
+  showSnakBar() {
   }
 }

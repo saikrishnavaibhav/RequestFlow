@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Request } from '../home/home.component';
+import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { CSVRecord } from '../new-request/new-request.component';
 import { RequestService } from '../services/request.service';
 import { TokenStorageService } from '../services/token-storage.service';
 import { UserService } from '../services/user.service';
 import { Location } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { SubmitDialogComponent } from '../submit-dialog/submit-dialog.component';
 
 @Component({
   selector: 'app-viewrequest',
@@ -28,7 +30,7 @@ export class ViewrequestComponent implements OnInit {
   headers:string[]=['ID','First Name', 'Last Name', 'Age', 'Salary'];
 
   constructor(private requestService: RequestService, private tokenService: TokenStorageService,
-     private userService: UserService, private location: Location){}
+     private userService: UserService, private location: Location, private matDialog: MatDialog){}
   
   ngOnInit(): void {
     this.request = this.requestService.getRequest();
@@ -69,38 +71,49 @@ export class ViewrequestComponent implements OnInit {
   };
 
   approve(approve:boolean){
-    this.userService.approveRequest(this.tokenService.getUser().id, this.request.id,approve).subscribe(
-      data=>{
-        console.log(data);
-        this.approved = true;
-        this.showSuccess = true;
-        if(approve){
-          this.successMessage = "Request Approved";
-          this.request.status = "APPROVED";
-          this.request.approvals[0].status = "APPROVED";
-        } else{
-          this.successMessage = "Request Rejected";
-          this.request.status = "REJECTED"
-          this.request.approvals[0].status = "REJECTED";
+    let message = "";
+    if(approve)
+      message = "Sure to approve request?";
+    else
+      message = "Sure to reject request?";
+    let submitDialog = this.matDialog.open(SubmitDialogComponent,{data: message});
+    submitDialog.afterClosed().subscribe(
+      result=> {
+        if(result === 'true'){
+          this.userService.approveRequest(this.tokenService.getUser().id, this.request.id,approve).subscribe(
+            data=>{
+              console.log(data);
+              this.approved = true;
+              this.showSuccess = true;
+              if(approve){
+                this.successMessage = "Request Approved";
+                this.request.status = "APPROVED";
+                this.request.approvals[0].status = "APPROVED";
+              } else{
+                this.successMessage = "Request Rejected";
+                this.request.status = "REJECTED"
+                this.request.approvals[0].status = "REJECTED";
+              }
+              this.showApproveRejectFalse();
+              setTimeout(() => {
+                this.showSuccess=false;
+              }, 2000);
+            },
+            error=>{
+            console.error(error);
+              this.showReject = true;
+            if(approve)
+              this.failureMessage = "Request Approve failed";
+            else
+              this.failureMessage = "Request Reject failed";
+              this.showApproveRejectTrue();
+              setTimeout(() => {
+                this.showFailed=false;
+              }, 2000);
+            }
+          );
         }
-        this.showApproveRejectFalse();
-        setTimeout(() => {
-          this.showSuccess=false;
-        }, 2000);
-      },
-      error=>{
-      console.error(error);
-        this.showReject = true;
-      if(approve)
-        this.failureMessage = "Request Approve failed";
-      else
-        this.failureMessage = "Request Reject failed";
-        this.showApproveRejectTrue();
-        setTimeout(() => {
-          this.showFailed=false;
-        }, 2000);
-      }
-    );
+      });
   }
 
   showApproveRejectFalse(){
@@ -115,6 +128,20 @@ export class ViewrequestComponent implements OnInit {
 
   back(){
     this.location.back();
+  }
+
+  downloadAsCsv(){
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true, 
+      useBom: true,
+      noDownload: false,
+      headers: this.headers
+    };
+   
+    new ngxCsv(this.records, 'Request_'+this.request.id, options);
   }
   
 }

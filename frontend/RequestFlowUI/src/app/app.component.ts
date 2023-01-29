@@ -31,11 +31,11 @@ export class AppComponent implements OnInit {
       this.username = user.username;
       if(this.roles[0] === 'ROLE_APPROVER'){
         this.isApprover = true;
-      }
+      } else
+        this.retrieveNotifications();
     } else {
-      this.router.navigateByUrl('/login')
+      this.router.navigateByUrl('/login');
     }
-    this.retrieveNotifications();
   }
 
   logout(): void {
@@ -68,7 +68,7 @@ export class AppComponent implements OnInit {
           this.notifications.push(notification);
         }
         this.notificationCount = this.notifications.filter(n => !n.read).length;
-        console.log(this.notificationCount);
+        this.notifications.reverse();
       },
       error => {
         console.error(error);
@@ -78,7 +78,11 @@ export class AppComponent implements OnInit {
 
   showNotifications():void{
     let notificationComponent = this.matDialog.open(NotificationsComponent, {data: this.notifications});
-    notificationComponent.afterClosed().subscribe();
+    notificationComponent.afterClosed().subscribe(
+      result => {
+        this.notificationCount = this.notifications.filter(n => !n.read).length;
+      }
+    );
   }
 }
 

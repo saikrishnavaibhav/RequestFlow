@@ -1,5 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { TokenStorageService } from '../services/token-storage.service';
 import { UserService } from '../services/user.service';
@@ -21,7 +22,8 @@ export class NewRequestComponent {
   headers:string[]=['ID','First Name', 'Last Name', 'Age', 'Salary'];
   @ViewChild('csvReader') csvReader: any;
 
-  constructor(public userService: UserService, public tokenService: TokenStorageService, private router: Router, private matDialog: MatDialog){}
+  constructor(public userService: UserService, public tokenService: TokenStorageService, 
+    private router: Router, private matDialog: MatDialog, private matSnackBar: MatSnackBar){}
 
   fileChanged(e:any) {
       this.file = e.target.files[0];
@@ -63,16 +65,21 @@ export class NewRequestComponent {
     let csvArr:CSVRecord[] = [];  
     for (let i = 1; i < csvRecordsArray.length; i++) {  
       if(csvRecordsArray[i] !== ''){
-      let currentRecord = (<string>csvRecordsArray[i]).split(','); 
-      let csvRecord:CSVRecord = {
-        id:Number.parseInt(currentRecord[0]),
-        firstName:currentRecord[1],
-        lastName:currentRecord[2],
-        age:Number.parseInt(currentRecord[3]),
-        salary:Number.parseInt(currentRecord[4])
+        let currentRecord:string[] = (<string>csvRecordsArray[i]).split(',');
+        if(!currentRecord.includes('')){
+        let csvRecord:CSVRecord = {
+          id:Number.parseInt(currentRecord[0]),
+          firstName:currentRecord[1],
+          lastName:currentRecord[2],
+          age:Number.parseInt(currentRecord[3]),
+          salary:Number.parseInt(currentRecord[4])
+        }
+        csvArr.push(csvRecord);
+        } else {
+          this.matSnackBar.open("Error: Invalid fields in the selected file", "Dismiss");
+          return [];
+        }
       }
-      csvArr.push(csvRecord);
-      };
     }  
     return csvArr;  
   }  
@@ -88,7 +95,7 @@ export class NewRequestComponent {
 
   submit(){
 
-    let submitDialog = this.matDialog.open(SubmitDialogComponent);
+    let submitDialog = this.matDialog.open(SubmitDialogComponent, {data: "Proceed with submitting request?"});
     submitDialog.afterClosed().subscribe(
       result=> {
         if(result === 'true'){
@@ -99,7 +106,7 @@ export class NewRequestComponent {
               setTimeout(() => {
                 this.isSubmitSuccess = false;
                 this.router.navigateByUrl("/home");
-              }, 2000);
+              }, 1500);
             },
             error => {
               console.error(error);

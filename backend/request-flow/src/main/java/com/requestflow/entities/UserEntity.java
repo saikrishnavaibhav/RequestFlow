@@ -2,7 +2,6 @@ package com.requestflow.entities;
 
 import java.util.HashSet;
 import java.util.Set;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -12,9 +11,13 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "users")
+@Table(name = "users",
+uniqueConstraints = { 
+		@UniqueConstraint(columnNames = "userName"),
+		@UniqueConstraint(columnNames = "emailId")})
 public class UserEntity {
 	
 	@Id

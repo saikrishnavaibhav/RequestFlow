@@ -12,12 +12,18 @@ button{
 
 .req-details{
     display: flex;
+    vertical-align: bottom;
+    width: fit-content;
 }
 
 p{
     margin-top: 20px;
     margin-right: auto;
-    width: 400px;
+    width: 300px;
+}
+.filename{
+    width: fit-content;
+    vertical-align: middle;
 }
 
 .req{

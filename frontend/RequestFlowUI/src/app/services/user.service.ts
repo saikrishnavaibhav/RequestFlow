@@ -56,9 +56,9 @@ export class UserService {
     return this.http.get(apiUrl + 'retrieveNotifications',{params:queryParams});
 	}
 
-  readNotification(notificationtId: number){
+  readNotification(notificationId: number){
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("notificationtId",notificationtId);
+    queryParams = queryParams.append("notificationId",notificationId);
     return this.http.put(apiUrl + 'readNotification',null, {params:queryParams});
   }
 

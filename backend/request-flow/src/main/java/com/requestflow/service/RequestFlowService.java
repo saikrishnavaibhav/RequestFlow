@@ -12,13 +12,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.requestflow.entities.ApprovalEntity;
 import com.requestflow.entities.NotificationEntity;
 import com.requestflow.entities.RequestEntity;
@@ -53,6 +53,8 @@ public class RequestFlowService {
 	@Autowired
 	PasswordEncoder encoder;
 	
+	private static final Logger logger = LoggerFactory.getLogger(RequestFlowService.class);
+	
 	public ResponseEntity<?> submitRequestForApproval(MultipartFile file, long userId) throws IOException {
 		
 		RequestEntity requestEntity = new RequestEntity();
@@ -64,7 +66,7 @@ public class RequestFlowService {
 		requestEntity.setFileName(file.getOriginalFilename());
 		System.out.println(requestEntity);
 		requestRepository.save(requestEntity);
-		
+		logger.info("request saved successfully");
 		return ResponseEntity.ok().build();
 	}
 
@@ -79,6 +81,7 @@ public class RequestFlowService {
 		List<RequestResponse> requestResponses  = new ArrayList<>();
 		requestRepository.findAllByUserId(userId).stream()
 		.forEach(re -> requestResponses.add(getRequestResponse(re)));
+		logger.info("requests: " + requestResponses);
 		return ResponseEntity.ok(requestResponses);
 	}
 	
@@ -159,6 +162,7 @@ public class RequestFlowService {
 		userEntity.setRoles(roles);
 		
 		userRepository.save(userEntity);
+		logger.info("New user created successfully with username: "+userEntity.getUserName());
 		
 		return ResponseEntity.ok().build();
 	}
@@ -179,7 +183,11 @@ public class RequestFlowService {
 		
 		requestEntity.setStatus(ApprovalEnum.INPROGRESS);
 		requestEntity.setApprovals(approvals);
-		requestRepository.save(requestEntity);
+		requestEntity = requestRepository.save(requestEntity);
+		logger.info("request " + requestEntity.getId() + " assigned to approver successfully");
+		ApprovalEntity savedApprovalEntity = requestEntity.getApprovals().stream().filter(re -> re.getRequestId() == approvalEntity.getRequestId()).findFirst().orElse(null);
+		if(savedApprovalEntity != null)
+			return ResponseEntity.ok(savedApprovalEntity);
 		return ResponseEntity.ok().build();
 	}
 
@@ -206,6 +214,7 @@ public class RequestFlowService {
 		});
 		requestEntity.setApprovals(approvalEntities);
 		requestRepository.save(requestEntity);
+		logger.info("Request with id "+requestEntity.getId()+" has been "+ requestEntity.getStatus().name());
 		addNotificationToUser(requestEntity.getUserId(), requestId,requestEntity.getStatus().name().toString());
 		
 		return ResponseEntity.ok(requestEntity);
@@ -219,13 +228,13 @@ public class RequestFlowService {
 		notification.setRead(false);
 		
 		notificationsRepository.save(notification);
-		
+		logger.info("notified user:"+ userId );
 		
 	}
 
 	public ResponseEntity<?> retrieveNotifications(long userId) {
 		List<NotificationEntity> notifications = notificationsRepository.findAllByUserId(userId);
-		System.out.println(notifications);
+		logger.info("retrieved notifications: " + notifications.size());
 		return ResponseEntity.ok(notifications);
 	}
 
@@ -236,6 +245,7 @@ public class RequestFlowService {
 		}
 		notificationEntity.setRead(true);
 		notificationsRepository.save(notificationEntity);
+		logger.info("notification "+ notificationId + " marked as read");
 		return ResponseEntity.ok().build();
 	}
 

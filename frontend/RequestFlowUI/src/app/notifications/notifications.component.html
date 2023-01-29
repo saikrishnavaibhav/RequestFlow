@@ -1,9 +1,24 @@
 <div class="component">
     
-    <mat-list role="list">
-        <mat-list-item role="listitem" *ngFor="let n of notifications">
-            <span>Request with Id {{n.id}} has been {{n.status}}</span>
-            <button mat-raised-button color="primary">mark as read</button>
-        </mat-list-item>
-      </mat-list>
+    <table mat-table [dataSource]="notifications" *ngIf="notifications.length>0" class="mat-elevation-z5">
+
+        <ng-container matColumnDef="Notifications">
+          <th mat-header-cell *matHeaderCellDef> Message </th>
+          <td mat-cell *matCellDef="let element"> Request with Id {{element.requestId}} has been {{element.status}} </td>
+        </ng-container>
+      
+        <ng-container matColumnDef="Mark as read">
+          <th mat-header-cell *matHeaderCellDef>  </th>
+          <td mat-cell *matCellDef="let element"> 
+            <button mat-icon-button color="primary" #tooltip="matTooltip"
+                matTooltip="mark as read" (click)="readNotification(element)" *ngIf="!element.read">
+            <mat-icon>mark_email_read</mat-icon>
+            </button> 
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+
 </div>

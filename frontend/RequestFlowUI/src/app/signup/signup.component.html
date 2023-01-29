@@ -72,6 +72,7 @@
     type="email"
     class="form-control"
     name="emailId"
+    pattern="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"
     [(ngModel)]="signupRequest.emailId"
     required
     #emailId="ngModel"
@@ -132,16 +133,16 @@
     <div
     class="alert alert-success"
     role="alert"
-    *ngIf="f.submitted && isSignupSuccess"
+    *ngIf="isSignupSuccess"
     >
     Signup Success
     </div>
     <div
     class="alert alert-danger"
     role="alert"
-    *ngIf="f.submitted && isSignupFailed"
+    *ngIf="isSignupFailed"
     >
-    Signup failed
+    Signup failed {{failedMessage}}
     </div>
   </div>
 </form>

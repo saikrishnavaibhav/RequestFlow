@@ -42,7 +42,6 @@ export class ApproverComponent implements OnInit {
           else if(req.status === 'REJECTED')
             this.rejectedRequests.push(req);
         }
-        console.log(this.requests);
       }, error => {
         console.error(error);
       }
@@ -56,14 +55,19 @@ export class ApproverComponent implements OnInit {
   assignRequest(request: Request){
     this.userService.assignRequest(this.user.id,request.id).subscribe(
       data=> {
-        request.status="INPROGRESS"
-        request.approvals = [{
-          approverId : this.user.id,
-          approver: this.user.firstName + ", " + this.user.lastName,
-          status: "INPROGRESS"
-          
-        }]
-       this.intiatedRequests =  this.intiatedRequests.filter(ir => ir.id !== request.id);
+        console.log(data);
+        request.status="INPROGRESS";
+        request.approvals = [data];
+        this.inprogressRequests.push(request);
+        console.log(this.inprogressRequests);
+        this.allRequests.map(req => {
+          if(req.id === request.id){
+            return request;
+          }
+          return req;
+        });
+        console.log(this.allRequests);
+        this.intiatedRequests =  this.intiatedRequests.filter(ir => ir.id !== request.id);
       },
       error=>{
       console.error(error);

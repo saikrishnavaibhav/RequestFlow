@@ -7,15 +7,19 @@
       <p><b>Request Id:</b> &nbsp;{{request.id}}</p>
       <p><b>Request Date:</b>&nbsp;{{request.date}}</p>
     </div>
-    <div class="req-details">
-      <p><b>File name:</b>&nbsp;{{request.fileName}}</p>
-      <p><b>Request status:</b>&nbsp;{{request.status}}</p>
-    </div>
     
     <div class="req-details" *ngFor="let approver of request.approvals">
+      <p><b>Request status:</b>&nbsp;{{request.status}}</p>
       <p><b>Approver name:</b> &nbsp; {{approver.approver}} </p>
       <p><b>Status :</b> &nbsp; {{approver.status}}</p>
     </div>
+  </div>
+  <div class="req-details">
+    <p class="filename"><b>File name:</b>&nbsp;{{request.fileName}}</p>
+    <button mat-icon-button color="primary" #tooltip="matTooltip"
+            matTooltip="download file" (click)="downloadAsCsv()">
+        <mat-icon>download_for_offline</mat-icon>
+    </button> 
   </div>
   <b>File Data:</b>
   <br>

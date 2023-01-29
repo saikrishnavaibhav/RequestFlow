@@ -12,6 +12,7 @@ export class SignupComponent {
   signupRequest = new SignupRequest();
   isSignupFailed = false;
   isSignupSuccess = false;
+  failedMessage = '';
 
   constructor(public userService:UserService,private router: Router){}
 
@@ -23,15 +24,17 @@ export class SignupComponent {
         setTimeout(() => {
           this.isSignupSuccess = false;
           this.router.navigateByUrl("/login");
-        }, 2000);
+        }, 3000);
         console.log("signup success");
       },
       error=> {
         console.error("invalid request");
+        console.error(error);
+        this.failedMessage = error.error.message;
         this.isSignupFailed = true;
         setTimeout(() => {
           this.isSignupFailed = false;
-        }, 2000);
+        }, 3000);
       }
     );
   }
