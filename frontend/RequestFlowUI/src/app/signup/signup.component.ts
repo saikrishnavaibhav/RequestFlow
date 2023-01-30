@@ -47,5 +47,4 @@ export class SignupRequest{
   public userName:any;
   public emailId:any;
   public password:any;
-  public role:any;
 }
