@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { TokenStorageService } from '../services/token-storage.service';
 import { UserService } from '../services/user.service';
+import { Location } from '@angular/common';
 import { SubmitDialogComponent } from '../submit-dialog/submit-dialog.component';
 
 @Component({
@@ -23,7 +24,7 @@ export class NewRequestComponent {
   @ViewChild('csvReader') csvReader: any;
 
   constructor(public userService: UserService, public tokenService: TokenStorageService, 
-    private router: Router, private matDialog: MatDialog, private matSnackBar: MatSnackBar){}
+    private router: Router, private matDialog: MatDialog, private matSnackBar: MatSnackBar, private location: Location){}
 
   fileChanged(e:any) {
       this.file = e.target.files[0];
@@ -127,6 +128,10 @@ export class NewRequestComponent {
     console.log(this.file);
     this.fileName = this.file.name;
     this.verifyCSV(); 
+  }
+
+  back(){
+    this.location.back();
   }
 }
 

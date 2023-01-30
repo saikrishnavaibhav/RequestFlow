@@ -1,5 +1,6 @@
 <div class="component">
-  <button mat-icon-button (click)="back()">
+  <button mat-icon-button #tooltip="matTooltip"
+  matTooltip="go back" (click)="back()">
     <mat-icon>arrow_back</mat-icon>
   </button>
   <div class="req">

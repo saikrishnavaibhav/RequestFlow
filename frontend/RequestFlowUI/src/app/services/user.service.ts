@@ -27,7 +27,8 @@ export class UserService {
     queryParams = queryParams.append("userId",userId);
     const formData = new FormData(); 
     formData.append("file", file, file.name);
-    return this.http.post( apiUrl + 'submitfileforapproval', formData, {headers:headers, params:queryParams});
+    return this.http.post( 'http://3.86.7.14:8080/api/submitFileForApproval', formData, {headers:headers, params:queryParams});
+    //return this.http.post( apiUrl + '/submitfileforapproval', formData, {headers:headers, params:queryParams});
     
   }
 

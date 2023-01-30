@@ -9,6 +9,10 @@ button{
     float: right;
 }
 
+.back-button{
+    float: left;
+}
+
 .dropzone{
     height: 150px;
     min-width: 100px;
