@@ -22,8 +22,10 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(authReq).pipe(tap(()=> {},
     
       (error:any) => {
-
-       if( error instanceof HttpErrorResponse){
+        console.error(error);
+        if(error instanceof ErrorResponse){
+          console.error(error);
+        } else if( error instanceof HttpErrorResponse){
          if(error.status === 401){ 
           console.error(error);
           if(!error.url?.includes("sign-in")){
@@ -41,3 +43,7 @@ export class AuthInterceptor implements HttpInterceptor {
 export const authInterceptorProviders = [
   { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
 ];
+
+export class ErrorResponse{
+  message:any;
+}

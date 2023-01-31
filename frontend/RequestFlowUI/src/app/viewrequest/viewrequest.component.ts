@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ngxCsv } from 'ngx-csv/ngx-csv';
 import { CSVRecord } from '../new-request/new-request.component';
 import { RequestService } from '../services/request.service';
@@ -7,13 +7,15 @@ import { UserService } from '../services/user.service';
 import { Location } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { SubmitDialogComponent } from '../submit-dialog/submit-dialog.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-viewrequest',
   templateUrl: './viewrequest.component.html',
   styleUrls: ['./viewrequest.component.css']
 })
-export class ViewrequestComponent implements OnInit {
+export class ViewrequestComponent implements OnInit, AfterViewInit {
   isApprover = false;
   approved = false;
   showSuccess = false;
@@ -23,19 +25,23 @@ export class ViewrequestComponent implements OnInit {
   showReject = true;
   successMessage = "";
   failureMessage = "";
+  remark = "";
   request: any;
+  dataSource:any;
   records:CSVRecord[]=[];
   header:any[]=[];
   role:any[]=[];
   headers:string[]=['ID','First Name', 'Last Name', 'Age', 'Salary'];
+  @ViewChild(MatPaginator) paginator:any = MatPaginator;
 
   constructor(private requestService: RequestService, private tokenService: TokenStorageService,
      private userService: UserService, private location: Location, private matDialog: MatDialog){}
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+  }
   
   ngOnInit(): void {
     this.request = this.requestService.getRequest();
-
-    console.log(this.request.file);
     let fileData:any[] = this.request.file;
 
     this.header = fileData[0].split(",");
@@ -53,6 +59,9 @@ export class ViewrequestComponent implements OnInit {
       
       this.records.push(csvRecord);
     }
+    this.dataSource = new MatTableDataSource<CSVRecord>(this.records);
+    
+    
     this.isApprover = this.tokenService.getUser().roles[0] === "ROLE_APPROVER";
     
     if(this.request.status === "APPROVED"){
@@ -71,16 +80,19 @@ export class ViewrequestComponent implements OnInit {
   };
 
   approve(approve:boolean){
-    let message = "";
-    if(approve)
-      message = "Sure to approve request?";
-    else
-      message = "Sure to reject request?";
-    let submitDialog = this.matDialog.open(SubmitDialogComponent,{data: message});
+    let data = [];
+    if(approve){
+      data.push("Sure to approve request?");
+      data.push("Approve");
+    } else{
+      data.push("Sure to reject request?");
+      data.push("Reject");
+    }
+    let submitDialog = this.matDialog.open(SubmitDialogComponent,{data: data});
     submitDialog.afterClosed().subscribe(
       result=> {
         if(result === 'true'){
-          this.userService.approveRequest(this.tokenService.getUser().id, this.request.id,approve).subscribe(
+          this.userService.approveRequest(this.tokenService.getUser().id, this.request.id,approve, this.remark).subscribe(
             data=>{
               console.log(data);
               this.approved = true;

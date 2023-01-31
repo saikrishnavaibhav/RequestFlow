@@ -26,6 +26,8 @@ import { NotificationsComponent } from './notifications/notifications.component'
 import {MatListModule} from '@angular/material/list';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatInputModule} from '@angular/material/input'; 
+import {MatPaginatorModule} from '@angular/material/paginator';
 
 @NgModule({
   declarations: [
@@ -57,7 +59,9 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
     MatBadgeModule,
     MatListModule,
     MatTooltipModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatInputModule,
+    MatPaginatorModule
   ],
   entryComponents:[LogoutDialogComponent, NotificationsComponent, SubmitDialogComponent],
   providers: [authInterceptorProviders],

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
@@ -6,13 +6,15 @@ import { TokenStorageService } from '../services/token-storage.service';
 import { UserService } from '../services/user.service';
 import { Location } from '@angular/common';
 import { SubmitDialogComponent } from '../submit-dialog/submit-dialog.component';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-new-request',
   templateUrl: './new-request.component.html',
   styleUrls: ['./new-request.component.css']
 })
-export class NewRequestComponent {
+export class NewRequestComponent{
 
   file:any;
   fileType:any;
@@ -20,7 +22,9 @@ export class NewRequestComponent {
   isSubmitSuccess = false;
   isSubmitFailure = false;
   records:CSVRecord[]=[];
+  dataSource:any;
   headers:string[]=['ID','First Name', 'Last Name', 'Age', 'Salary'];
+  @ViewChild(MatPaginator) paginator:any = MatPaginator;
   @ViewChild('csvReader') csvReader: any;
 
   constructor(public userService: UserService, public tokenService: TokenStorageService, 
@@ -51,7 +55,9 @@ export class NewRequestComponent {
 
       let csvData = fileReader.result;  
       let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);  
-      this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray);  
+      this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray);
+      this.dataSource = new MatTableDataSource<CSVRecord>(this.records);
+      this.dataSource.paginator = this.paginator;
       console.log(this.records);
     };
       
@@ -96,7 +102,7 @@ export class NewRequestComponent {
 
   submit(){
 
-    let submitDialog = this.matDialog.open(SubmitDialogComponent, {data: "Proceed with submitting request?"});
+    let submitDialog = this.matDialog.open(SubmitDialogComponent, {data: ["Proceed with submitting request?","Submit"]});
     submitDialog.afterClosed().subscribe(
       result=> {
         if(result === 'true'){

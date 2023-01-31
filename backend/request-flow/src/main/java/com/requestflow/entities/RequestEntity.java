@@ -25,6 +25,7 @@ public class RequestEntity {
 	private String fileName;
 	
 	@Lob
+	@Column(columnDefinition="LONGBLOB")
 	private byte[] file;
 	
 	@Enumerated(EnumType.STRING)
