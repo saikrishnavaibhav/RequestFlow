@@ -21,6 +21,8 @@ export class NewRequestComponent{
   fileName:string="";
   isSubmitSuccess = false;
   isSubmitFailure = false;
+  showProgress = false;
+  showTable = false;
   records:CSVRecord[]=[];
   dataSource:any;
   headers:string[]=['ID','First Name', 'Last Name', 'Age', 'Salary'];
@@ -58,6 +60,7 @@ export class NewRequestComponent{
       this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray);
       this.dataSource = new MatTableDataSource<CSVRecord>(this.records);
       this.dataSource.paginator = this.paginator;
+      this.showTable = true;
       console.log(this.records);
     };
       
@@ -83,7 +86,7 @@ export class NewRequestComponent{
         }
         csvArr.push(csvRecord);
         } else {
-          this.matSnackBar.open("Error: Invalid fields in the selected file", "Dismiss");
+          this.matSnackBar.open("Error: Invalid fields in the selected file", "Dismiss",{duration:5000});
           return [];
         }
       }
@@ -103,24 +106,31 @@ export class NewRequestComponent{
   submit(){
 
     let submitDialog = this.matDialog.open(SubmitDialogComponent, {data: ["Proceed with submitting request?","Submit"]});
+    
     submitDialog.afterClosed().subscribe(
       result=> {
         if(result === 'true'){
+          this.showProgress = true;
           this.userService.submitFileForApproval(this.file, this.tokenService.getUser().id).subscribe(
             data => {
+              this.dataSource = new MatTableDataSource<CSVRecord>([]);
+              this.showProgress = false;
               this.fileReset();
               this.isSubmitSuccess = true;
+              this.matSnackBar.open("Request created successfully", "Dismiss",{duration:4000});
               setTimeout(() => {
                 this.isSubmitSuccess = false;
                 this.router.navigateByUrl("/home");
-              }, 1500);
+              }, 4000);
             },
             error => {
+              this.showProgress = false;
               console.error(error);
               this.isSubmitFailure = true;
+              this.matSnackBar.open("Failed to create request", "Dismiss",{duration:3000});
               setTimeout(() => {
                 this.isSubmitFailure = false;
-              }, 2000);
+              }, 3000);
             }
           );
         }

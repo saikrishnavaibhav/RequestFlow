@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { RequestService } from '../services/request.service';
@@ -40,6 +41,12 @@ export class HomeComponent implements OnInit {
         }
         console.log(this.userRequests);
       }, error => {
+        if(error instanceof HttpErrorResponse){
+          if(error.status === 0){
+            
+          }
+        }
+        console.error("getRequests Error:");
         console.error(error);
       }
     );

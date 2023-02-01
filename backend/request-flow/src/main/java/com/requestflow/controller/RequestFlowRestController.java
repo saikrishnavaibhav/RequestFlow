@@ -1,19 +1,12 @@
 package com.requestflow.controller;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,12 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.requestflow.jwt.JwtUtils;
 import com.requestflow.requests.LoginRequest;
 import com.requestflow.requests.SignupRequest;
 import com.requestflow.responses.LoginResponse;
 import com.requestflow.service.RequestFlowService;
-import com.requestflow.userdetails.UserDetailsImpl;
 
 
 @RestController
@@ -39,12 +30,6 @@ public class RequestFlowRestController {
 	
 	@Autowired
 	RequestFlowService requestFlowService;
-	
-	@Autowired
-	JwtUtils jwtUtils;
-	
-	@Autowired
-	AuthenticationManager authenticationManager;
 	
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup(@Valid @RequestBody SignupRequest signupRequest){
@@ -57,25 +42,7 @@ public class RequestFlowRestController {
 	@PostMapping("/sign-in")
 	public ResponseEntity<LoginResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
 
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword()));
-
-		
-		SecurityContextHolder.getContext().setAuthentication(authentication);
-		String jwt = jwtUtils.generateJwtToken(authentication);
-		
-		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();		
-		List<String> roles = userDetails.getAuthorities().stream()
-				.map(GrantedAuthority::getAuthority)
-				.collect(Collectors.toList());
-		
-		return ResponseEntity.ok(new LoginResponse(jwt, 
-												 userDetails.getId(), 
-												 userDetails.getUsername(), 
-												 userDetails.getFirstName(),
-												 userDetails.getLastName(),
-												 userDetails.getEmail(),
-												 roles));
+		return requestFlowService.signin(loginRequest);
 	}
 	
 	@PreAuthorize("hasAuthority('ROLE_REQUESTOR')")
@@ -130,12 +97,16 @@ public class RequestFlowRestController {
 		return requestFlowService.readNotification(notificationId);
 	}
 	
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/retrieveUsers")
+	public ResponseEntity<?> retrieveUsers(@RequestParam("userId") long userId){
+		return requestFlowService.retrieveUsers(userId);
+	}
 	
-	
-//	@PostMapping("/reject")
-//	public ResponseEntity<?> rejectRequest(@RequestParam("requestId") Long requestId, @RequestParam("userId") long userId){
-//		return requestFlowService.rejectRequest(requestId);
-//	}
-	
+	@PreAuthorize("hasRole('ADMIN') OR hasRole('APPROVER') OR hasRole('REQUESTOR')")
+	@GetMapping("/retrieveLogs")
+	public ResponseEntity<?> retrieveLogs(){
+		return requestFlowService.retrieveLogs();
+	}
 
 }

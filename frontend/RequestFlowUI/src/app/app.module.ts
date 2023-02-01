@@ -11,23 +11,26 @@ import { HomeComponent } from './home/home.component';
 import { ApproverComponent } from './approver/approver.component';
 import { authInterceptorProviders } from './_helpers/auth.interceptor';
 import { ViewrequestComponent } from './viewrequest/viewrequest.component';
+import { NotificationsComponent } from './notifications/notifications.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LogoutDialogComponent } from './logout-dialog/logout-dialog.component';
+import { SubmitDialogComponent } from './submit-dialog/submit-dialog.component';
+import { AdminComponent } from './admin/admin.component';
+import { DragDirective } from './drag.directive';
 import {MatTableModule} from '@angular/material/table';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
-import { DragDirective } from './drag.directive';
 import {MatDialogModule} from '@angular/material/dialog';
-import { LogoutDialogComponent } from './logout-dialog/logout-dialog.component';
-import { SubmitDialogComponent } from './submit-dialog/submit-dialog.component';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatIconModule} from '@angular/material/icon';
 import {MatBadgeModule} from '@angular/material/badge';
-import { NotificationsComponent } from './notifications/notifications.component';
 import {MatListModule} from '@angular/material/list';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatInputModule} from '@angular/material/input'; 
 import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatProgressBarModule} from '@angular/material/progress-bar';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -41,7 +44,8 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     DragDirective,
     LogoutDialogComponent,
     SubmitDialogComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    AdminComponent
 
   ],
   imports: [
@@ -61,7 +65,9 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatTooltipModule,
     MatSnackBarModule,
     MatInputModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatProgressBarModule,
+    MatSelectModule
   ],
   entryComponents:[LogoutDialogComponent, NotificationsComponent, SubmitDialogComponent],
   providers: [authInterceptorProviders],

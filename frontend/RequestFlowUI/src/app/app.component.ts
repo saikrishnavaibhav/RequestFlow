@@ -17,6 +17,8 @@ export class AppComponent implements OnInit {
   showModeratorBoard = false;
   username?: string;
   isApprover = false;
+  isAdmin = false;
+  isRequestor = false;
   notificationCount = 0;
   notifications:Notification[] = [];
 
@@ -31,8 +33,12 @@ export class AppComponent implements OnInit {
       this.username = user.username;
       if(this.roles[0] === 'ROLE_APPROVER'){
         this.isApprover = true;
-      } else
+      } else if(this.roles[0] === 'ROLE_ADMIN'){
+        this.isAdmin = true;
+      }else {
+        this.isRequestor = true;
         this.retrieveNotifications();
+      }
     } else {
       this.router.navigateByUrl('/login');
     }

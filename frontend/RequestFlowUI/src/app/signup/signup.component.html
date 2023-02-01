@@ -1,3 +1,7 @@
+<button mat-icon-button #tooltip="matTooltip"
+  matTooltip="go back" (click)="back()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
 <div class="container">
   <form
   name="form"
@@ -104,12 +108,20 @@
     Invalid password!
     </div>
   </div>
-
+  <mat-label>Select role</mat-label>
+  <br>
+  <mat-form-field appearance="fill">
+    <mat-select [(ngModel)]="signupRequest.role" name="role">
+      <mat-option *ngFor="let role of roles" [value]="role.value">
+        {{role.viewValue}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
   <div class="form-group">
     <button mat-raised-button
      color="primary" 
      class="login-button">
-     Sign up
+     Register
     </button>
   </div>
 
@@ -119,16 +131,20 @@
     role="alert"
     *ngIf="isSignupSuccess"
     >
-    Signup Success
+    user registeration success
     </div>
     <div
     class="alert alert-danger"
     role="alert"
     *ngIf="isSignupFailed"
     >
-    Signup failed {{failedMessage}}
+    user registeration failed {{failedMessage}}
     </div>
   </div>
 </form>
 
+</div>
+
+<div id="progress" *ngIf="showProgress">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </div>

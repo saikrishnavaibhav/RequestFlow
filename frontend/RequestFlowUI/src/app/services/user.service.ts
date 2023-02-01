@@ -70,5 +70,15 @@ export class UserService {
     return this.http.put(apiUrl + 'readNotification',null, {headers, params:queryParams});
   }
 
+  retrieveUsers(userId: number) :Observable<any> {
+		let queryParams = new HttpParams();
+    queryParams = queryParams.append("userId",userId);
+    return this.http.get(apiUrl + 'retrieveUsers',{headers, params:queryParams})
+  }
+
+  retrieveLogs() :Observable<any> {
+    return this.http.get(apiUrl + 'retrieveLogs',{headers})
+  }
+
   constructor(private http: HttpClient) { }
 }

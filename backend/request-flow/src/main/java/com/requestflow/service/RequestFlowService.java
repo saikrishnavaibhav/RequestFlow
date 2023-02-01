@@ -7,30 +7,44 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.requestflow.entities.ApprovalEntity;
+import com.requestflow.entities.LogEntity;
 import com.requestflow.entities.NotificationEntity;
 import com.requestflow.entities.RequestEntity;
 import com.requestflow.entities.Role;
 import com.requestflow.entities.UserEntity;
+import com.requestflow.jwt.JwtUtils;
+import com.requestflow.repositories.LogsRepository;
 import com.requestflow.repositories.NotificationsRepository;
 import com.requestflow.repositories.RequestRepository;
 import com.requestflow.repositories.RoleRepository;
 import com.requestflow.repositories.UserRepository;
+import com.requestflow.requests.LoginRequest;
 import com.requestflow.requests.SignupRequest;
+import com.requestflow.responses.LoginResponse;
 import com.requestflow.responses.MessageResponse;
 import com.requestflow.responses.RequestResponse;
+import com.requestflow.userdetails.UserDetailsImpl;
 import com.requestflow.utils.ApprovalEnum;
 import com.requestflow.utils.Roles;
 import com.requestflow.utils.UserUtils;
@@ -51,7 +65,16 @@ public class RequestFlowService {
 	NotificationsRepository notificationsRepository;
 	
 	@Autowired
+	LogsRepository logsRepository;
+	
+	@Autowired
 	PasswordEncoder encoder;
+	
+	@Autowired
+	JwtUtils jwtUtils;
+	
+	@Autowired
+	AuthenticationManager authenticationManager;
 	
 	private static final Logger logger = LoggerFactory.getLogger(RequestFlowService.class);
 	
@@ -65,8 +88,8 @@ public class RequestFlowService {
 		requestEntity.setUserId(userId);
 		requestEntity.setFileName(file.getOriginalFilename());
 		System.out.println(requestEntity);
-		requestRepository.save(requestEntity);
-		logger.info("request saved successfully");
+		requestEntity = requestRepository.save(requestEntity);
+		logMessage("Request "+requestEntity.getId() + " created");
 		return ResponseEntity.ok().build();
 	}
 
@@ -122,6 +145,28 @@ public class RequestFlowService {
 		}
 		return data;
 	}
+	
+	public ResponseEntity<LoginResponse> signin(LoginRequest loginRequest) {
+		Authentication authentication = authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(loginRequest.getUserName(), loginRequest.getPassword()));
+
+		
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		String jwt = jwtUtils.generateJwtToken(authentication);
+		
+		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();		
+		List<String> roles = userDetails.getAuthorities().stream()
+				.map(GrantedAuthority::getAuthority)
+				.collect(Collectors.toList());
+		logMessage("user "+ userDetails.getUsername() +" last logged in at "+LocalDateTime.now());
+		return ResponseEntity.ok(new LoginResponse(jwt, 
+												 userDetails.getId(), 
+												 userDetails.getUsername(), 
+												 userDetails.getFirstName(),
+												 userDetails.getLastName(),
+												 userDetails.getEmail(),
+												 roles));
+	}
 
 	public ResponseEntity<?> signupUser(SignupRequest signupRequest) {
 		
@@ -139,31 +184,30 @@ public class RequestFlowService {
 		userEntity.setUserName(signupRequest.getUserName());
 		
 		Set<Role> roles = new HashSet<>();
-		List<String> strRoles = signupRequest.getRoles(); 
+		String role =  signupRequest.getRole();
 		
-		if (strRoles == null) {
+		if (role == null) {
+			Role userRole = roleRepository.findByRole(Roles.ROLE_REQUESTOR)
+					.orElseThrow(() -> new RuntimeException(UserUtils.ROLE_NOT_FOUND));
+			roles.add(userRole);
+		} else if ("ROLE_APPROVER".equalsIgnoreCase(role)) {
+			Role authorRole = roleRepository.findByRole(Roles.ROLE_APPROVER)
+					.orElseThrow(() -> new RuntimeException(UserUtils.ROLE_NOT_FOUND));
+			roles.add(authorRole);
+		} else if ("ROLE_REQUESTOR".equalsIgnoreCase(role)) {
 			Role userRole = roleRepository.findByRole(Roles.ROLE_REQUESTOR)
 					.orElseThrow(() -> new RuntimeException(UserUtils.ROLE_NOT_FOUND));
 			roles.add(userRole);
 		} else {
-			strRoles.forEach(role -> {
-				if("approver".equalsIgnoreCase(role)) {
-					Role authorRole = roleRepository.findByRole(Roles.ROLE_APPROVER)
-							.orElseThrow(() -> new RuntimeException(UserUtils.ROLE_NOT_FOUND));
-					roles.add(authorRole);
-				} else {
-					Role userRole = roleRepository.findByRole(Roles.ROLE_REQUESTOR)
-							.orElseThrow(() -> new RuntimeException(UserUtils.ROLE_NOT_FOUND));
-					roles.add(userRole);
-				}
-			});
+			Role userRole = roleRepository.findByRole(Roles.ROLE_ADMIN)
+					.orElseThrow(() -> new RuntimeException(UserUtils.ROLE_NOT_FOUND));
+			roles.add(userRole);
 		}
 
 		userEntity.setRoles(roles);
 		
 		userRepository.save(userEntity);
-		logger.info("New user created successfully with username: "+userEntity.getUserName());
-		
+		logMessage("New user created successfully with username: "+userEntity.getUserName());
 		return ResponseEntity.ok().build();
 	}
 
@@ -184,7 +228,7 @@ public class RequestFlowService {
 		requestEntity.setStatus(ApprovalEnum.INPROGRESS);
 		requestEntity.setApprovals(approvals);
 		requestEntity = requestRepository.save(requestEntity);
-		logger.info("request " + requestEntity.getId() + " assigned to approver successfully");
+		logMessage("request " + requestEntity.getId() + " got assigned to an approver");
 		ApprovalEntity savedApprovalEntity = requestEntity.getApprovals().stream().filter(re -> re.getRequestId() == approvalEntity.getRequestId()).findFirst().orElse(null);
 		if(savedApprovalEntity != null)
 			return ResponseEntity.ok(savedApprovalEntity);
@@ -214,7 +258,8 @@ public class RequestFlowService {
 		});
 		requestEntity.setApprovals(approvalEntities);
 		requestRepository.save(requestEntity);
-		logger.info("Request with id "+requestEntity.getId()+" has been "+ requestEntity.getStatus().name());
+		logger.info("Request with id "+requestEntity.getId()+" got "+ requestEntity.getStatus().name());
+		logMessage("Request with id "+requestEntity.getId()+" got "+ requestEntity.getStatus().name());
 		addNotificationToUser(requestEntity.getUserId(), requestId,requestEntity.getStatus().name().toString());
 		
 		return ResponseEntity.ok(requestEntity);
@@ -229,6 +274,7 @@ public class RequestFlowService {
 		
 		notificationsRepository.save(notification);
 		logger.info("notified user:"+ userId );
+		logMessage("Notified user: "+ userId + " on request " + status);
 		
 	}
 
@@ -245,15 +291,23 @@ public class RequestFlowService {
 		}
 		notificationEntity.setRead(true);
 		notificationsRepository.save(notificationEntity);
-		logger.info("notification "+ notificationId + " marked as read");
+		logMessage("notification "+ notificationId + " marked as read "+LocalDateTime.now());
 		return ResponseEntity.ok().build();
 	}
 
-//	public ResponseEntity<?> rejectRequest(Long requestId) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
+	public ResponseEntity<?> retrieveUsers(long userId) {
+		return ResponseEntity.ok(userRepository.findAll());
+	}
+
+	public ResponseEntity<?> retrieveLogs() {
+		return ResponseEntity.ok(logsRepository.findAll());
+	}
 	
-	
+	public void logMessage(String message) {
+		logger.info(message);
+		LogEntity logEntity = new LogEntity();
+		logEntity.setLog(message);
+		logsRepository.save(logEntity);
+	}
 	
 }

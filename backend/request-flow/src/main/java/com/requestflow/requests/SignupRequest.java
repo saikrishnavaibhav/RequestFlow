@@ -1,13 +1,11 @@
 package com.requestflow.requests;
 
-import java.util.List;
-
-import com.requestflow.validations.ValidPassword;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern.Flag;
 import javax.validation.constraints.Size;
+
+import com.requestflow.validations.ValidPassword;
 
 
 public class SignupRequest {
@@ -34,8 +32,6 @@ public class SignupRequest {
 	
 	@ValidPassword
     private String password;
-	
-	private List<String> roles;
 
 	public String getFirstName() {
 		return firstName;
@@ -85,18 +81,10 @@ public class SignupRequest {
 		this.password = password;
 	}
 
-	public List<String> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(List<String> roles) {
-		this.roles = roles;
-	}
-
 	@Override
 	public String toString() {
 		return "SignupRequest [firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName + ", role="
-				+ role + ", emailId=" + emailId + ", password=" + password + ", roles=" + roles + "]";
+				+ role + ", emailId=" + emailId + ", password=" + password + "]";
 	}
 
 }
