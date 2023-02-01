@@ -19,6 +19,7 @@ export class AppComponent implements OnInit {
   isApprover = false;
   isAdmin = false;
   isRequestor = false;
+  showProgress = false;
   notificationCount = 0;
   notifications:Notification[] = [];
 
@@ -45,12 +46,13 @@ export class AppComponent implements OnInit {
   }
 
   logout(): void {
-    
     let logoutDialog = this.matDialog.open(LogoutDialogComponent);
     logoutDialog.afterClosed().subscribe(
       result=> {
         if(result === 'true'){
+          this.showProgress = true;
           this.tokenStorageService.signOut();
+          this.showProgress = false;
           window.location.reload();
         }
       }

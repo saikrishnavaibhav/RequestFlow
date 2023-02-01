@@ -15,3 +15,6 @@
 <div class="container">
   <router-outlet></router-outlet>
 </div>
+<div id="progress" *ngIf="showProgress">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+</div>

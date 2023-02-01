@@ -17,9 +17,13 @@ export class HomeComponent implements OnInit {
   showProgress = false;
   userRequestsDataSource = new MatTableDataSource<Request>([]);
   userRequests:Request[]=[];
+  logs: string[] = []; 
+  logDataSource = new MatTableDataSource<string>([]);
   user:any=null;
   displayedColumns: string[] = ['Id', 'File name', 'Status', 'Date', 'View Request'];
+  logColumns = ['Log']
   @ViewChild('paginator') paginator:any = MatPaginator;
+  @ViewChild('logPaginator') logPaginator:any = MatPaginator;
   
   constructor(public userService: UserService, private tokenService: TokenStorageService, private requestService: RequestService, private router: Router){}
 
@@ -57,7 +61,21 @@ export class HomeComponent implements OnInit {
         console.error(error);
       }
     );
+    
+    this.userService.retrieveLogs().subscribe(
+      data=> {
+        let logs = data;
+        for(let log of logs){
+          this.logs.push(log.log);
+        }
 
+        this.logDataSource = new MatTableDataSource<string>(this.logs.reverse());
+        this.logDataSource.paginator = this.logPaginator;
+      },
+      error=> {
+        console.error(error);
+      }
+    );
     this.showProgress = false;
   }
   filterRequests() {

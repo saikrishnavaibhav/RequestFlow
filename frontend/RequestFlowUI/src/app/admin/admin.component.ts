@@ -21,8 +21,8 @@ export class AdminComponent implements OnInit {
   logs: string[] = []; 
   users:user[]=[];
   user:any;
-  @ViewChild(MatPaginator) logPaginator:any = MatPaginator;
-  @ViewChild(MatPaginator) userPaginator:any = MatPaginator;
+  @ViewChild('logPaginator') logPaginator:any = MatPaginator;
+  @ViewChild('userPaginator') userPaginator:any = MatPaginator;
 
   constructor(private tokenService: TokenStorageService, private userService: UserService, private matDialog: MatDialog){}
 
