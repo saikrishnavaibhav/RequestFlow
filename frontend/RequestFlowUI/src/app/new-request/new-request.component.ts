@@ -14,7 +14,7 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './new-request.component.html',
   styleUrls: ['./new-request.component.css']
 })
-export class NewRequestComponent{
+export class NewRequestComponent implements AfterViewInit{
 
   file:any;
   fileType:any;
@@ -24,13 +24,16 @@ export class NewRequestComponent{
   showProgress = false;
   showTable = false;
   records:CSVRecord[]=[];
-  dataSource:any;
+  recordsDataSource = new MatTableDataSource<CSVRecord>([]);
   headers:string[]=['ID','First Name', 'Last Name', 'Age', 'Salary'];
-  @ViewChild(MatPaginator) paginator:any = MatPaginator;
+  @ViewChild('paginator') paginator:any = MatPaginator;
   @ViewChild('csvReader') csvReader: any;
 
   constructor(public userService: UserService, public tokenService: TokenStorageService, 
     private router: Router, private matDialog: MatDialog, private matSnackBar: MatSnackBar, private location: Location){}
+  ngAfterViewInit(): void {
+    
+  }
 
   fileChanged(e:any) {
       this.file = e.target.files[0];
@@ -58,10 +61,9 @@ export class NewRequestComponent{
       let csvData = fileReader.result;  
       let csvRecordsArray = (<string>csvData).split(/\r\n|\n/);  
       this.records = this.getDataRecordsArrayFromCSVFile(csvRecordsArray);
-      this.dataSource = new MatTableDataSource<CSVRecord>(this.records);
-      this.dataSource.paginator = this.paginator;
+      this.recordsDataSource = new MatTableDataSource<CSVRecord>(this.records);   
+      this.recordsDataSource.paginator = this.paginator;
       this.showTable = true;
-      console.log(this.records);
     };
       
     fileReader.onerror = function () {  
@@ -113,7 +115,7 @@ export class NewRequestComponent{
           this.showProgress = true;
           this.userService.submitFileForApproval(this.file, this.tokenService.getUser().id).subscribe(
             data => {
-              this.dataSource = new MatTableDataSource<CSVRecord>([]);
+              this.recordsDataSource = new MatTableDataSource<CSVRecord>([]);
               this.showProgress = false;
               this.fileReset();
               this.isSubmitSuccess = true;

@@ -1,10 +1,11 @@
 <div class="requests-container" ng-app="requests App" ng-controller="requests controller">
-    <h1 *ngIf="userRequests.length>0">Requests created by {{user.username}}</h1>
-    <div class="alert alert-warning" *ngIf="userRequests.length==0">
-      {{user.username}} haven't created any requests yet
-    </div>
+  <h1 *ngIf="userRequests.length>0">Requests created by {{user.username}}</h1>
+  <div class="alert alert-warning" *ngIf="userRequests.length==0">
+    {{user.username}} haven't created any requests yet
+  </div>
 
-    <table mat-table [dataSource]="userRequests" *ngIf="userRequests.length>0" class="mat-elevation-z8">
+  <div class="mat-elevation-z4" *ngIf="userRequests.length>0">
+    <table mat-table [dataSource]="userRequestsDataSource">
 
         <ng-container matColumnDef="Id">
           <th mat-header-cell *matHeaderCellDef> Id </th>
@@ -36,5 +37,15 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>      
-
+    <mat-paginator 
+      #paginator="matPaginator"
+      length="{{userRequests.length}}"
+      [pageSizeOptions]="[5, 10, 15]"
+      showFirstLastButtons
+      aria-label="select page">
+    </mat-paginator>
+  </div>
+</div>
+<div id="progress" *ngIf="showProgress">
+  <mat-progress-bar mode="indeterminate"></mat-progress-bar>
 </div>

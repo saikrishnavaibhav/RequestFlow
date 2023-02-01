@@ -1,16 +1,19 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { TokenStorageService } from '../services/token-storage.service';
 import { UserService } from '../services/user.service';
+import { SubmitDialogComponent } from '../submit-dialog/submit-dialog.component';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.css']
 })
-export class AdminComponent implements OnInit, AfterViewInit {
+export class AdminComponent implements OnInit {
   
+  showProgress = false;
   logColumns = ['Log']
   userColumns = ["Id", "User name", "Role", "Edit", "Delete"];
   logDataSource = new MatTableDataSource<string>([]);
@@ -21,16 +24,11 @@ export class AdminComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) logPaginator:any = MatPaginator;
   @ViewChild(MatPaginator) userPaginator:any = MatPaginator;
 
-  constructor(private tokenService: TokenStorageService, private userService: UserService){}
-
-  
-  ngAfterViewInit(): void {
-    
-  }
+  constructor(private tokenService: TokenStorageService, private userService: UserService, private matDialog: MatDialog){}
 
   ngOnInit(): void {
     this.user = this.tokenService.getUser();
-
+    this.showProgress = true;
     this.userService.retrieveLogs().subscribe(
       data=> {
         let logs = data;
@@ -68,6 +66,7 @@ export class AdminComponent implements OnInit, AfterViewInit {
         console.error(error);
       }
     );
+    this.showProgress = false;
   }
 
   edit(user: any){
@@ -75,7 +74,30 @@ export class AdminComponent implements OnInit, AfterViewInit {
   }
 
   delete(user: any){
-
+    let data = [];
+    
+    data.push("Sure to delete user: "+user.userName+"?");
+    data.push("Delete");
+    let submitDialog = this.matDialog.open(SubmitDialogComponent,{data: data});
+    submitDialog.afterClosed().subscribe(
+      result=> {
+        if(result === 'true'){
+          this.showProgress = true;
+          this.userService.deleteUser(user.id).subscribe(
+            data=>{
+              this.users = this.users.filter(u=>u.id !== user.id);
+              this.usersDataSource = new MatTableDataSource<user>(this.users);
+              this.usersDataSource.paginator = this.userPaginator;
+              
+            },
+            error=>{
+              console.error(error);
+            }
+          );
+          this.showProgress = false;
+        }
+      }
+    );
   }
 }
 

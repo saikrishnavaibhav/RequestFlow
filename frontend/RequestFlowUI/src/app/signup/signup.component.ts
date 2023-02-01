@@ -34,11 +34,11 @@ export class SignupComponent {
         this.signupRequest = new SignupRequest();
         this.showProgress = false;
         this.isSignupSuccess = true;
-        this.matSnackBar.open("User registered successfully", "Dismiss",{duration:5000});
+        this.matSnackBar.open("User registered successfully", "Dismiss",{duration:2000});
         setTimeout(() => {
           this.isSignupSuccess = false;
           this.router.navigateByUrl("/login");
-        }, 5000);
+        }, 2000);
         console.log("signup success");
       },
       error=> {

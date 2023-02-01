@@ -73,11 +73,17 @@ export class UserService {
   retrieveUsers(userId: number) :Observable<any> {
 		let queryParams = new HttpParams();
     queryParams = queryParams.append("userId",userId);
-    return this.http.get(apiUrl + 'retrieveUsers',{headers, params:queryParams})
+    return this.http.get(apiUrl + 'retrieveUsers',{headers, params:queryParams});
   }
 
   retrieveLogs() :Observable<any> {
-    return this.http.get(apiUrl + 'retrieveLogs',{headers})
+    return this.http.get(apiUrl + 'retrieveLogs',{headers});
+  }
+
+  deleteUser(userId:number) :Observable<any> {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("userId",userId);
+    return this.http.delete(apiUrl + 'deleteUser',{params:queryParams});
   }
 
   constructor(private http: HttpClient) { }

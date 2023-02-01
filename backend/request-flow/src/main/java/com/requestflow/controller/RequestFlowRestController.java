@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -107,6 +108,12 @@ public class RequestFlowRestController {
 	@GetMapping("/retrieveLogs")
 	public ResponseEntity<?> retrieveLogs(){
 		return requestFlowService.retrieveLogs();
+	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@DeleteMapping("/deleteUser")
+	public ResponseEntity<?> deleteUser(@RequestParam("userId") long userId){
+		return requestFlowService.deleteUser(userId);
 	}
 
 }

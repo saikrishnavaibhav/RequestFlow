@@ -27,6 +27,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.requestflow.entities.ApprovalEntity;
 import com.requestflow.entities.LogEntity;
 import com.requestflow.entities.NotificationEntity;
@@ -300,7 +301,8 @@ public class RequestFlowService {
 	}
 
 	public ResponseEntity<?> retrieveLogs() {
-		return ResponseEntity.ok(logsRepository.findAll());
+		List<LogEntity> logs = (List<LogEntity>) logsRepository.findAll();
+		return ResponseEntity.ok(logs);
 	}
 	
 	public void logMessage(String message) {
@@ -308,6 +310,16 @@ public class RequestFlowService {
 		LogEntity logEntity = new LogEntity();
 		logEntity.setLog(message);
 		logsRepository.save(logEntity);
+	}
+
+	public ResponseEntity<?> deleteUser(long userId) {
+		Optional<UserEntity> user = userRepository.findById(userId);
+		if(user.isPresent()) {
+			userRepository.deleteById(userId);
+			logMessage("Deleted user "+user.get().getUserName());
+			return ResponseEntity.ok().build();
+		}
+		return ResponseEntity.badRequest().build();
 	}
 	
 }

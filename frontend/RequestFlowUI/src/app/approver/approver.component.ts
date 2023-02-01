@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Request } from '../home/home.component';
 import { RequestService } from '../services/request.service';
@@ -11,14 +13,31 @@ import { UserService } from '../services/user.service';
   styleUrls: ['./approver.component.css']
 })
 export class ApproverComponent implements OnInit {
+
+  showProgress = false;
   requests:Request[]=[];
   intiatedRequests:Request[]=[];
   inprogressRequests:Request[]=[];
   approvedRequests:Request[]=[];
   rejectedRequests:Request[]=[];
+  logs: string[] = []; 
+
+  logDataSource = new MatTableDataSource<string>([]);
+  intiatedRequestsDataSource = new MatTableDataSource<Request>([]);
+  inprogressRequestsDataSource = new MatTableDataSource<Request>([]);
+  approvedRequestsDataSource = new MatTableDataSource<Request>([]);
+  rejectedRequestsDataSource = new MatTableDataSource<Request>([]);
+
+  @ViewChild('logPaginator') logPaginator:any = MatPaginator;
+  @ViewChild('intiatedRequestsPaginator') intiatedRequestsPaginator:any = MatPaginator;
+  @ViewChild('inprogressRequestsPaginator') inprogressRequestsPaginator:any = MatPaginator;
+  @ViewChild('approvedRequestsPaginator') approvedRequestsPaginator:any = MatPaginator;
+  @ViewChild('rejectedRequestsPaginator') rejectedRequestsPaginator:any = MatPaginator;
+
   allRequests:Request[]=[];
   user:any=null;
   category:String="INITIATED";
+  logColumns = ['Log']
   initiatedColumns: string[] = ['Id', 'File name', 'Status', 'Date', 'Assign'];
   inprogressColumns: string[] = ['Id', 'File name', 'Status', 'Date', 'View'];
 
@@ -27,6 +46,7 @@ export class ApproverComponent implements OnInit {
   ngOnInit(): void {
 
     this.user = this.tokenService.getUser();
+    this.showProgress = true;
     this.userService.getAllRequests()
     .subscribe(
       data => {
@@ -42,10 +62,37 @@ export class ApproverComponent implements OnInit {
           else if(req.status === 'REJECTED')
             this.rejectedRequests.push(req);
         }
+        this.intiatedRequestsDataSource = new MatTableDataSource<Request>(this.intiatedRequests);
+        this.intiatedRequestsDataSource.paginator = this.intiatedRequestsPaginator;
+        
+        this.inprogressRequestsDataSource = new MatTableDataSource<Request>(this.inprogressRequests);
+        this.inprogressRequestsDataSource.paginator = this.inprogressRequestsPaginator;
+        
+        this.approvedRequestsDataSource = new MatTableDataSource<Request>(this.approvedRequests);
+        this.approvedRequestsDataSource.paginator = this.approvedRequestsPaginator;
+    
+        this.rejectedRequestsDataSource = new MatTableDataSource<Request>(this.rejectedRequests);
+        this.rejectedRequestsDataSource.paginator = this.rejectedRequestsPaginator;
       }, error => {
         console.error(error);
       }
-    )
+    );
+
+  this.userService.retrieveLogs().subscribe(
+      data=> {
+        let logs = data;
+        for(let log of logs){
+          this.logs.push(log.log);
+        }
+
+        this.logDataSource = new MatTableDataSource<string>(this.logs.reverse());
+        this.logDataSource.paginator = this.logPaginator;
+      },
+      error=> {
+        console.error(error);
+      }
+    );
+    this.showProgress = false;
   }
 
   openRequest(request: any) {
@@ -53,6 +100,7 @@ export class ApproverComponent implements OnInit {
   }
 
   assignRequest(request: Request){
+    this.showProgress = true;
     this.userService.assignRequest(this.user.id,request.id).subscribe(
       data=> {
         console.log(data);
@@ -66,13 +114,18 @@ export class ApproverComponent implements OnInit {
           }
           return req;
         });
-        console.log(this.allRequests);
         this.intiatedRequests =  this.intiatedRequests.filter(ir => ir.id !== request.id);
+        this.intiatedRequestsDataSource = new MatTableDataSource<Request>(this.intiatedRequests);
+        this.intiatedRequestsDataSource.paginator = this.intiatedRequestsPaginator;
+        
+        this.inprogressRequestsDataSource = new MatTableDataSource<Request>(this.inprogressRequests);
+        this.inprogressRequestsDataSource.paginator = this.inprogressRequestsPaginator;
       },
       error=>{
       console.error(error);
       }
     );
+    this.showProgress = false;
 
   }
 

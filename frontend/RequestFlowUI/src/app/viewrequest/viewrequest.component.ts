@@ -23,6 +23,7 @@ export class ViewrequestComponent implements OnInit, AfterViewInit {
   rejected = false;
   showApprove = true;
   showReject = true;
+  showProgress = false;
   successMessage = "";
   failureMessage = "";
   remark = "";
@@ -35,12 +36,14 @@ export class ViewrequestComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator:any = MatPaginator;
 
   constructor(private requestService: RequestService, private tokenService: TokenStorageService,
-     private userService: UserService, private location: Location, private matDialog: MatDialog){}
+      private userService: UserService, private location: Location, private matDialog: MatDialog){}
+  
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
   }
   
   ngOnInit(): void {
+    this.showProgress = true;
     this.request = this.requestService.getRequest();
     let fileData:any[] = this.request.file;
 
@@ -73,6 +76,7 @@ export class ViewrequestComponent implements OnInit, AfterViewInit {
       this.failureMessage = "Request rejected";
       this.showApproveRejectFalse();
     }
+    this.showProgress= false;
   }
 
   toUpper = function(header : any){ 
@@ -92,6 +96,7 @@ export class ViewrequestComponent implements OnInit, AfterViewInit {
     submitDialog.afterClosed().subscribe(
       result=> {
         if(result === 'true'){
+          this.showProgress = true;
           this.userService.approveRequest(this.tokenService.getUser().id, this.request.id,approve, this.remark).subscribe(
             data=>{
               console.log(data);
@@ -124,6 +129,7 @@ export class ViewrequestComponent implements OnInit, AfterViewInit {
               }, 2000);
             }
           );
+          this.showProgress = false;
         }
       });
   }

@@ -1,5 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { RequestService } from '../services/request.service';
 import { TokenStorageService } from '../services/token-storage.service';
@@ -12,14 +14,17 @@ import { UserService } from '../services/user.service';
 })
 export class HomeComponent implements OnInit {
 
+  showProgress = false;
+  userRequestsDataSource = new MatTableDataSource<Request>([]);
   userRequests:Request[]=[];
   user:any=null;
   displayedColumns: string[] = ['Id', 'File name', 'Status', 'Date', 'View Request'];
+  @ViewChild('paginator') paginator:any = MatPaginator;
   
   constructor(public userService: UserService, private tokenService: TokenStorageService, private requestService: RequestService, private router: Router){}
 
   ngOnInit(): void {
-
+    this.showProgress = true;
     this.user = this.tokenService.getUser();
 
     this.userService.getRequests(this.tokenService.getUser().id)
@@ -37,8 +42,10 @@ export class HomeComponent implements OnInit {
             approvals:req.approvals
           }
           this.userRequests.push(request);
-          this.filterRequests();
+          //this.filterRequests();
         }
+        this.userRequestsDataSource = new MatTableDataSource<Request>(this.userRequests);
+        this.userRequestsDataSource.paginator = this.paginator;
         console.log(this.userRequests);
       }, error => {
         if(error instanceof HttpErrorResponse){
@@ -50,6 +57,8 @@ export class HomeComponent implements OnInit {
         console.error(error);
       }
     );
+
+    this.showProgress = false;
   }
   filterRequests() {
     this.userRequests = this.userRequests.filter(ur => ur.fileName !== null && ur.userId !== null);
