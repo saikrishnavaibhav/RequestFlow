@@ -2,6 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { EditUserComponent } from '../edit-user/edit-user.component';
 import { TokenStorageService } from '../services/token-storage.service';
 import { UserService } from '../services/user.service';
 import { SubmitDialogComponent } from '../submit-dialog/submit-dialog.component';
@@ -70,7 +71,40 @@ export class AdminComponent implements OnInit {
   }
 
   edit(user: any){
+    let editUserComponent = this.matDialog.open(EditUserComponent,{data:user});
+    editUserComponent.afterClosed().subscribe(
+      result=>{
+        console.log(result);
+        if(result.event === 'Update'){
+          this.showProgress = true;
+          this.updateRowData(result.data);
+          this.usersDataSource = new MatTableDataSource<user>(this.users);
+          this.usersDataSource.paginator = this.userPaginator;
+          this.showProgress = false;
+        }
 
+      }
+    );
+  }
+
+  updateRowData(data: any) {
+    this.users.filter(u=>{
+
+      if(u.id == data.id){
+        u.role = data.role;
+        u.userName = data.userName;
+        console.log(u);
+        this.userService.updateUser(u).subscribe(
+          data=>{
+            console.log("Updated user data");
+          },
+          error=>{
+            console.log(error);
+          }
+        );
+      }
+      return true;
+    });
   }
 
   delete(user: any){

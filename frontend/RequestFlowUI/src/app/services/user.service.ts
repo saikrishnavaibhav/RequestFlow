@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { user } from '../admin/admin.component';
 
 //const apiUrl= "https://unzlccfxxa.execute-api.us-east-1.amazonaws.com/uat/";
 const apiUrl= "http://localhost:8080/api/";
@@ -12,6 +13,7 @@ const headers= new HttpHeaders();
   providedIn: 'root'
 })
 export class UserService {
+  
   login(loginRequest: any) {
     return this.http.post(apiUrl + 'sign-in', loginRequest,{headers});
   }
@@ -84,6 +86,15 @@ export class UserService {
     let queryParams = new HttpParams();
     queryParams = queryParams.append("userId",userId);
     return this.http.delete(apiUrl + 'deleteUser',{params:queryParams});
+  }
+
+  updateUser(user: user) :Observable<any> {
+    let local_user:user ={
+      role : 'ROLE_'+ user.role,
+      id: user.id,
+      userName: user.userName
+    }
+    return this.http.put(apiUrl + 'updateUser',local_user);
   }
 
   constructor(private http: HttpClient) { }

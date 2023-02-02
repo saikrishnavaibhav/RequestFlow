@@ -1,0 +1,41 @@
+<h1 mat-dialog-title>Update request</h1>
+<div class="component">
+    <form name="form" (ngSubmit)="f.form.valid && update()" #f="ngForm" novalidate>
+
+    <div class="form-group">
+        <label for="userName">Enter username</label>
+        <input
+        type="text"
+        class="form-control input"
+        name="userName"
+        [(ngModel)]="updateRequest.userName"
+        minlength="3"
+        required
+        #userName="ngModel"
+        />
+        <div
+        class="alert alert-danger"
+        role="alert"
+        *ngIf="userName.errors && f.submitted"
+        >
+        Invalid user name(min. length 3)!
+        </div>
+    </div>
+
+    <mat-label>Select role</mat-label>
+    <br>
+    <mat-form-field appearance="fill">
+        <mat-select [(ngModel)]="updateRequest.role" name="role">
+        <mat-option *ngFor="let role of roles" [value]="role.value">
+            {{role.viewValue}}
+        </mat-option>
+        </mat-select>
+    </mat-form-field>
+ 
+</form>
+
+<div mat-dialog-actions>
+  <button mat-button mat-dialog-close color="primary" (click)="update()">Update</button>
+  <button mat-button mat-dialog-close (click)="closeDialog()" >cancel</button>
+</div>
+</div>

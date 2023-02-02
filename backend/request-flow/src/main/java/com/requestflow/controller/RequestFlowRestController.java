@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.requestflow.requests.LoginRequest;
 import com.requestflow.requests.SignupRequest;
+import com.requestflow.requests.UserRequest;
 import com.requestflow.responses.LoginResponse;
 import com.requestflow.service.RequestFlowService;
 
@@ -115,5 +116,13 @@ public class RequestFlowRestController {
 	public ResponseEntity<?> deleteUser(@RequestParam("userId") long userId){
 		return requestFlowService.deleteUser(userId);
 	}
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@PutMapping("/updateUser")
+	public ResponseEntity<?> updateUser(@RequestBody UserRequest userRequest){
+		return requestFlowService.updateUser(userRequest);
+	}
+	
+	
 
 }

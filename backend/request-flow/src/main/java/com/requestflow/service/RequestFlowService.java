@@ -42,6 +42,7 @@ import com.requestflow.repositories.RoleRepository;
 import com.requestflow.repositories.UserRepository;
 import com.requestflow.requests.LoginRequest;
 import com.requestflow.requests.SignupRequest;
+import com.requestflow.requests.UserRequest;
 import com.requestflow.responses.LoginResponse;
 import com.requestflow.responses.MessageResponse;
 import com.requestflow.responses.RequestResponse;
@@ -183,29 +184,7 @@ public class RequestFlowService {
 		userEntity.setLastName(signupRequest.getLastName());
 		userEntity.setPassword(encoder.encode(signupRequest.getPassword()));
 		userEntity.setUserName(signupRequest.getUserName());
-		
-		Set<Role> roles = new HashSet<>();
-		String role =  signupRequest.getRole();
-		
-		if (role == null) {
-			Role userRole = roleRepository.findByRole(Roles.ROLE_REQUESTOR)
-					.orElseThrow(() -> new RuntimeException(UserUtils.ROLE_NOT_FOUND));
-			roles.add(userRole);
-		} else if ("ROLE_APPROVER".equalsIgnoreCase(role)) {
-			Role authorRole = roleRepository.findByRole(Roles.ROLE_APPROVER)
-					.orElseThrow(() -> new RuntimeException(UserUtils.ROLE_NOT_FOUND));
-			roles.add(authorRole);
-		} else if ("ROLE_REQUESTOR".equalsIgnoreCase(role)) {
-			Role userRole = roleRepository.findByRole(Roles.ROLE_REQUESTOR)
-					.orElseThrow(() -> new RuntimeException(UserUtils.ROLE_NOT_FOUND));
-			roles.add(userRole);
-		} else {
-			Role userRole = roleRepository.findByRole(Roles.ROLE_ADMIN)
-					.orElseThrow(() -> new RuntimeException(UserUtils.ROLE_NOT_FOUND));
-			roles.add(userRole);
-		}
-
-		userEntity.setRoles(roles);
+		userEntity.setRoles(getRole(signupRequest.getRole()));
 		
 		userRepository.save(userEntity);
 		logMessage("New user created successfully with username: "+userEntity.getUserName());
@@ -320,6 +299,43 @@ public class RequestFlowService {
 			return ResponseEntity.ok().build();
 		}
 		return ResponseEntity.badRequest().build();
+	}
+
+	public ResponseEntity<?> updateUser(UserRequest userRequest) {
+		Optional<UserEntity> user = userRepository.findById(userRequest.getId());
+		if(user.isPresent()) {
+			UserEntity userEntity = user.get();
+			userEntity.setUserName(userRequest.getUserName());
+			userEntity.setRoles(getRole(userRequest.getRole()));
+			userRepository.save(userEntity);
+			logMessage("Updated user: "+userRequest.getUserName() +" to "+(userRequest.getRole().split("_")[1]));
+			return ResponseEntity.ok().build();
+		}
+		return ResponseEntity.badRequest().build();
+	}
+	
+	private Set<Role> getRole(String role){
+		Set<Role> roles = new HashSet<>();
+		
+		if (role == null) {
+			Role userRole = roleRepository.findByRole(Roles.ROLE_REQUESTOR)
+					.orElseThrow(() -> new RuntimeException(UserUtils.ROLE_NOT_FOUND));
+			roles.add(userRole);
+		} else if ("ROLE_APPROVER".equalsIgnoreCase(role)) {
+			Role authorRole = roleRepository.findByRole(Roles.ROLE_APPROVER)
+					.orElseThrow(() -> new RuntimeException(UserUtils.ROLE_NOT_FOUND));
+			roles.add(authorRole);
+		} else if ("ROLE_REQUESTOR".equalsIgnoreCase(role)) {
+			Role userRole = roleRepository.findByRole(Roles.ROLE_REQUESTOR)
+					.orElseThrow(() -> new RuntimeException(UserUtils.ROLE_NOT_FOUND));
+			roles.add(userRole);
+		} else {
+			Role userRole = roleRepository.findByRole(Roles.ROLE_ADMIN)
+					.orElseThrow(() -> new RuntimeException(UserUtils.ROLE_NOT_FOUND));
+			roles.add(userRole);
+		}
+		
+		return roles;
 	}
 	
 }

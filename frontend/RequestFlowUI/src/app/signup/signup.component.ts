@@ -70,7 +70,7 @@ export class SignupRequest{
   public role:any;
 }
 
-interface Roles {
+export interface Roles {
   value: string;
   viewValue: string;
 }

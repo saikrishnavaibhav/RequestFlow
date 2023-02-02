@@ -16,6 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LogoutDialogComponent } from './logout-dialog/logout-dialog.component';
 import { SubmitDialogComponent } from './submit-dialog/submit-dialog.component';
 import { AdminComponent } from './admin/admin.component';
+import { EditUserComponent } from './edit-user/edit-user.component';
 import { DragDirective } from './drag.directive';
 import {MatTableModule} from '@angular/material/table';
 import {MatToolbarModule} from '@angular/material/toolbar';
@@ -45,7 +46,8 @@ import {MatSelectModule} from '@angular/material/select';
     LogoutDialogComponent,
     SubmitDialogComponent,
     NotificationsComponent,
-    AdminComponent
+    AdminComponent,
+    EditUserComponent
 
   ],
   imports: [
@@ -69,7 +71,7 @@ import {MatSelectModule} from '@angular/material/select';
     MatProgressBarModule,
     MatSelectModule
   ],
-  entryComponents:[LogoutDialogComponent, NotificationsComponent, SubmitDialogComponent],
+  entryComponents:[LogoutDialogComponent, NotificationsComponent, SubmitDialogComponent, EditUserComponent],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]
 })
