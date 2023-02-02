@@ -66,11 +66,11 @@
     </mat-paginator>
   </div>
   <div *ngIf="isApprover">
-    <div class="form-group remark-field">
+    <!-- <div class="form-group remark-field">
       <label for="remark">Remark (optional)</label>
       <input type="text" class="form-control" name="remark" [(ngModel)]="remark" minlength="4"/>
     </div>
-    <br>    
+    <br>     -->
     <button mat-raised-button color="warn" (click)="approve(false)" *ngIf="showReject">REJECT</button>
     <button mat-raised-button color="primary" (click)="approve(true)" *ngIf="showApprove">APPROVE</button>
     <div

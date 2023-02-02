@@ -31,11 +31,11 @@ export class SignupComponent {
     this.showProgress = true;
     this.userService.signUpUser(this.signupRequest).subscribe(
       data=> {
-        this.signupRequest = new SignupRequest();
         this.showProgress = false;
         this.isSignupSuccess = true;
         this.matSnackBar.open("User registered successfully", "Dismiss",{duration:2000});
         setTimeout(() => {
+          this.signupRequest = new SignupRequest();
           this.isSignupSuccess = false;
           this.router.navigateByUrl("/login");
         }, 2000);

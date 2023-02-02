@@ -9,6 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SubmitDialogComponent } from '../submit-dialog/submit-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-viewrequest',
@@ -36,7 +37,7 @@ export class ViewrequestComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator:any = MatPaginator;
 
   constructor(private requestService: RequestService, private tokenService: TokenStorageService,
-      private userService: UserService, private location: Location, private matDialog: MatDialog){}
+      private userService: UserService, private location: Location, private matDialog: MatDialog, private matSnackBar: MatSnackBar){}
   
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
@@ -106,9 +107,11 @@ export class ViewrequestComponent implements OnInit, AfterViewInit {
                 this.successMessage = "Request Approved";
                 this.request.status = "APPROVED";
                 this.request.approvals[0].status = "APPROVED";
+                this.matSnackBar.open("Request APPROVED","Dismiss",{duration:2000});
               } else{
                 this.successMessage = "Request Rejected";
                 this.request.status = "REJECTED"
+                this.matSnackBar.open("Request REJECTED","Dismiss",{duration:2000});
                 this.request.approvals[0].status = "REJECTED";
               }
               this.showApproveRejectFalse();
